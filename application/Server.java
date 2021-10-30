@@ -44,7 +44,7 @@ public class Server
     private static String[] parseRequest(Socket client, StringBuilder builtRequest)
     {
     	String request = builtRequest.toString();
-//		System.out.println(request);
+		System.out.println(request);
 
         String[] requestsLines = request.split("\r\n");
         String[] requestLine = requestsLines[0].split(" ");
