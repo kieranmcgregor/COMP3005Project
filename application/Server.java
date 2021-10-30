@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class Server
 {
-	public static final String PROJECT_PATH = "/var/www/project/";
+	public static final String PROJECT_PATH = "/var/www/COMP3005Project/";
 
     public static void main(String[] args) throws Exception
     {
