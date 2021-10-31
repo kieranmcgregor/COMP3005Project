@@ -63,16 +63,7 @@ public class Server
 			String header = requestsLines[h];
 			headers.add(header);
 		}
-/*
-		String accessLog = String.format("Client %s\n method %s\n path %s\n version %s\n host %s\n headers %s\n"
-											, client.toString()
-											, method
-											, path
-											, version
-											, host
-											, headers.toString());
-		System.out.println(accessLog);
-*/
+
 		String[] sa = {client.toString(), method, path, version, host, headers.toString()};
 
 		return sa;
@@ -122,6 +113,7 @@ public class Server
 		String status = "400";
 		Path filePath = getFilePath(path);
 
+		System.out.println(filePath);
 		if (path.equals(""))
 		{
 			filePath = getFilePath("html/notFound.html");
@@ -140,6 +132,9 @@ public class Server
 			}
 		}
 		
+		// System.out.println(filePath);
+		System.out.println(status);
+
 		contentType = guessContentType(filePath);
 		sendResponse(client, status, contentType, Files.readAllBytes(filePath));
 	}
@@ -157,7 +152,7 @@ public class Server
 			if (authorized())
 			{
 				System.out.println("Check user type...");
-				getResource(client, "/search.html");
+				getResource(client, "/search");
 			}
 		}
 		else
