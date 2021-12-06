@@ -97,29 +97,74 @@ public class LoginFrame extends JFrame implements ActionListener
         if (event.getSource() == loginButton)
         {
             Boolean isUserType;
+            Boolean isValid;
             String userText;
             String passwordText;
 
             isUserType = userType.isSelected();
-            userText = userTextField.getText();
-            passwordText = passwordField.getText();
+            isValid = false;
+            userText = userTextField.getText().trim();
+            passwordText = passwordField.getText().trim();
 
+            if (!userText.isEmpty() && !passwordText.isEmpty())
+            {
+                System.out.println("Type: " + isUserType + ", Username: " + userText + ", Password " + passwordText + ", Logged In");
 
-            System.out.println("Type: " + isUserType + ", Username: " + userText + ", Password " + passwordText + ", Logged In");
+                if (isUserType)
+                {
+                    // Check if user exists and password is correct
+                    isValid = true;
+                }
+                else
+                {
+                    // Check if owner exists and password is correct
+                    AddBook.addBook();
+                    isValid = true;
+                }
+
+                if (isValid)
+                {
+                    this.setVisible(false);
+                    this.dispose();
+                }
+            }
         }
 
         // Handle register button event
         if (event.getSource() == registerButton)
         {
             Boolean isUserType;
+            Boolean isValid;
             String userText;
             String passwordText;
 
             isUserType = userType.isSelected();
-            userText = userTextField.getText();
-            passwordText = passwordField.getText();
+            isValid = false;
+            userText = userTextField.getText().trim();
+            passwordText = passwordField.getText().trim();
 
-            System.out.println("Type: " + isUserType + ", Username: " + userText + ", Password " + passwordText + ", Registered and Logged In");
+            if (!userText.isEmpty() && !passwordText.isEmpty())
+            {
+                System.out.println("Type: " + isUserType + ", Username: " + userText + ", Password " + passwordText + ", Registered and Logged In");
+                
+                if (isUserType)
+                {
+                    // Check if user exists otherwise add user with password
+                    isValid = true;
+                }
+                else
+                {
+                    // Check if owner exists otherwise add user with password
+                    AddBook.addBook();
+                    isValid = true;
+                }
+
+                if (isValid)
+                {
+                    this.setVisible(false);
+                    this.dispose();
+                }
+            }
         }
 
         // Handle Clear button event
