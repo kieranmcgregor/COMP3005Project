@@ -104,7 +104,7 @@ public class LoginFrame extends JFrame implements ActionListener
             isUserType = userType.isSelected();
             isValid = false;
             userText = userTextField.getText().trim();
-            passwordText = passwordField.getText().trim();
+            passwordText = new String(passwordField.getPassword());
 
             if (!userText.isEmpty() && !passwordText.isEmpty())
             {
@@ -118,7 +118,7 @@ public class LoginFrame extends JFrame implements ActionListener
                 else
                 {
                     // Check if owner exists and password is correct
-                    AddBook.addBook();
+                    OwnerView.showOwnerView();
                     isValid = true;
                 }
 
@@ -141,7 +141,7 @@ public class LoginFrame extends JFrame implements ActionListener
             isUserType = userType.isSelected();
             isValid = false;
             userText = userTextField.getText().trim();
-            passwordText = passwordField.getText().trim();
+            passwordText = new String(passwordField.getPassword());
 
             if (!userText.isEmpty() && !passwordText.isEmpty())
             {
@@ -155,7 +155,7 @@ public class LoginFrame extends JFrame implements ActionListener
                 else
                 {
                     // Check if owner exists otherwise add user with password
-                    AddBook.addBook();
+                    OwnerView.showOwnerView();
                     isValid = true;
                 }
 

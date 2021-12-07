@@ -3,10 +3,15 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class AddBookFrame extends JFrame implements ActionListener
+public class OwnerViewFrame extends JFrame implements ActionListener
 {
     Container container = getContentPane();
-    JLabel pageTitleLabel = new JLabel("Let's Grow the Inventory of LookInnaBook!");
+    JTabbedPane tabbedPane = new JTabbedPane();
+    JLabel pageTitleLabel = new JLabel("LookInnaBook: Owner");
+    JPanel addBook = new JPanel();
+    JPanel deleteBook = new JPanel();
+    JPanel editBook = new JPanel();
+    JPanel reports = new JPanel();
     JLabel titleLabel = new JLabel("Title:");
     JLabel genreLabel = new JLabel("Genre:");
     JTextField titleTextField = new JTextField();
@@ -16,7 +21,7 @@ public class AddBookFrame extends JFrame implements ActionListener
 
 
     // Constructor
-    AddBookFrame()
+    OwnerViewFrame()
     {
         setLayoutManager();
         setLocationAndSize();
@@ -33,7 +38,9 @@ public class AddBookFrame extends JFrame implements ActionListener
     public void setLocationAndSize()
     {
         // Set location and size of each component
-        pageTitleLabel.setBounds(200, 100, 500, 60);
+        pageTitleLabel.setBounds(225, 25, 500, 60);
+
+        tabbedPane.setBounds(25, 100, 735, 440);
 
         titleLabel.setBounds(250, 225, 100, 30);
         genreLabel.setBounds(250, 270, 100, 30);
@@ -54,12 +61,22 @@ public class AddBookFrame extends JFrame implements ActionListener
         // Add components to view
         container.add(pageTitleLabel);
 
-        container.add(titleLabel);
-        container.add(genreLabel);
-        container.add(titleTextField);
-        container.add(genreTextField);
-        container.add(addBookButton);
-        container.add(clearButton);
+        // Add to addBook tabe
+        addBook.add(titleLabel);
+        addBook.add(genreLabel);
+        addBook.add(titleTextField);
+        addBook.add(genreTextField);
+        addBook.add(addBookButton);
+        addBook.add(clearButton);
+
+        // Add tabs to tabbed pane
+        tabbedPane.add("Add Book", addBook);
+        tabbedPane.add("Delete Book", deleteBook);
+        tabbedPane.add("Edit Book", editBook);
+        tabbedPane.add("Reports", reports);
+
+        // Add tabbed pane to container
+        container.add(tabbedPane);
     }
 
     public void addActionEvent()
