@@ -14,13 +14,14 @@ public class OwnerViewFrame extends JFrame implements ActionListener
     JTabbedPane tabbedPane = new JTabbedPane();
     JLabel pageTitleLabel = new JLabel("LookInnaBook: Owner");
 
-    JPanel addBook = new JPanel();
-    JScrollPane addBookScrollPane = new JScrollPane(addBook);
+    // Create CUD tab components
+    JPanel addEditDeleteBook = new JPanel();
+    JScrollPane addEditDeleteBookScrollPane = new JScrollPane(addEditDeleteBook);
 
-    JPanel deleteBook = new JPanel();
-    JPanel editBook = new JPanel();
+    // Create report tab
     JPanel reports = new JPanel();
 
+    // Create components for add book tab
     JLabel isbnLabel = new JLabel("ISBN:");
     JLabel titleLabel = new JLabel("Title:");
     JLabel genreLabel = new JLabel("Genre:");
@@ -81,6 +82,8 @@ public class OwnerViewFrame extends JFrame implements ActionListener
     JFormattedTextField publisherAccountNumberTextField = new JFormattedTextField(accountNumberMask);
 
     JButton addBookButton = new JButton("Add");
+    JButton editBookButton = new JButton("Edit");
+    JButton deleteBookButton = new JButton("Delete");
     JButton clearButton = new JButton("Clear");
 
     // Constructor
@@ -111,9 +114,7 @@ public class OwnerViewFrame extends JFrame implements ActionListener
     {
         container.setLayout(null);
 
-        addBook.setLayout(null);
-        deleteBook.setLayout(null);
-        editBook.setLayout(null);
+        addEditDeleteBook.setLayout(null);
         reports.setLayout(null);
     }
 
@@ -124,6 +125,7 @@ public class OwnerViewFrame extends JFrame implements ActionListener
 
         tabbedPane.setBounds(25, 100, 735, 440);
 
+        // Position the add book tab components
         isbnLabel.setBounds(175, 25, 150, 30);
         titleLabel.setBounds(175, 60, 150, 30);
         genreLabel.setBounds(175, 95, 150, 30);
@@ -164,8 +166,10 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         publisherTransitNumberTextField.setBounds(350, 620, 150, 30);
         publisherAccountNumberTextField.setBounds(350, 655, 150, 30);
 
-        addBookButton.setBounds(225, 690, 100, 30);
-        clearButton.setBounds(475, 690, 100, 30);
+        addBookButton.setBounds(75, 690, 100, 30);
+        editBookButton.setBounds(225, 690, 100, 30);
+        deleteBookButton.setBounds(375, 690, 100, 30);
+        clearButton.setBounds(525, 690, 100, 30);
     }
 
     public void setUniqueAttributes()
@@ -195,65 +199,68 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         publisherAccountNumberLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
         // Set addBook vertical scroll
-        //addBookScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        addBookScrollPane.setPreferredSize(new Dimension(400, 440));
-        addBook.setPreferredSize(new Dimension(400, 745));
+        addEditDeleteBookScrollPane.setPreferredSize(new Dimension(400, 440));
+        addEditDeleteBook.setPreferredSize(new Dimension(400, 745));
     }
 
+    public void addComponentsToAddEditDeleteBookTab()
+    {
+        // Add labels to addEditDeleteBook
+        addEditDeleteBook.add(isbnLabel);
+        addEditDeleteBook.add(titleLabel);
+        addEditDeleteBook.add(genreLabel);
+        addEditDeleteBook.add(pageCountLabel);
+        addEditDeleteBook.add(priceLabel);
+        addEditDeleteBook.add(publisherPercentageLabel);
+        addEditDeleteBook.add(publisherIDLabel);
+        addEditDeleteBook.add(publisherNameLabel);
+        addEditDeleteBook.add(publisherEmailLabel);
+        addEditDeleteBook.add(publisherPhoneNumberLabel);
+        addEditDeleteBook.add(publisherStreetNumberLabel);
+        addEditDeleteBook.add(publisherStreetLabel);
+        addEditDeleteBook.add(publisherCityLabel);
+        addEditDeleteBook.add(publisherProvinceLabel);
+        addEditDeleteBook.add(publisherPostalCodeLabel);
+        addEditDeleteBook.add(publisherCountryLabel);
+        addEditDeleteBook.add(publisherInstitutionNumberLabel);
+        addEditDeleteBook.add(publisherTransitNumberLabel);
+        addEditDeleteBook.add(publisherAccountNumberLabel);
+
+        // Add fields to addBook
+        addEditDeleteBook.add(isbnTextField);
+        addEditDeleteBook.add(titleTextField);
+        addEditDeleteBook.add(genreTextField);
+        addEditDeleteBook.add(pageCountTextField);
+        addEditDeleteBook.add(priceTextField);
+        addEditDeleteBook.add(publisherPercentageTextField);
+        addEditDeleteBook.add(publisherIDTextField);
+        addEditDeleteBook.add(publisherNameTextField);
+        addEditDeleteBook.add(publisherEmailTextField);
+        addEditDeleteBook.add(publisherPhoneNumberTextField);
+        addEditDeleteBook.add(publisherStreetNumberTextField);
+        addEditDeleteBook.add(publisherStreetTextField);
+        addEditDeleteBook.add(publisherCityTextField);
+        addEditDeleteBook.add(publisherProvinceTextField);
+        addEditDeleteBook.add(publisherPostalCodeTextField);
+        addEditDeleteBook.add(publisherCountryTextField);
+        addEditDeleteBook.add(publisherInstitutionNumberTextField);
+        addEditDeleteBook.add(publisherTransitNumberTextField);
+        addEditDeleteBook.add(publisherAccountNumberTextField);
+
+        addEditDeleteBook.add(addBookButton);
+        addEditDeleteBook.add(editBookButton);
+        addEditDeleteBook.add(deleteBookButton);
+        addEditDeleteBook.add(clearButton);
+    }
     public void addComponentsToContainer()
     {
         // Add components to view
         container.add(pageTitleLabel);
 
-        // Add labels to addBook
-        addBook.add(isbnLabel);
-        addBook.add(titleLabel);
-        addBook.add(genreLabel);
-        addBook.add(pageCountLabel);
-        addBook.add(priceLabel);
-        addBook.add(publisherPercentageLabel);
-        addBook.add(publisherIDLabel);
-        addBook.add(publisherNameLabel);
-        addBook.add(publisherEmailLabel);
-        addBook.add(publisherPhoneNumberLabel);
-        addBook.add(publisherStreetNumberLabel);
-        addBook.add(publisherStreetLabel);
-        addBook.add(publisherCityLabel);
-        addBook.add(publisherProvinceLabel);
-        addBook.add(publisherPostalCodeLabel);
-        addBook.add(publisherCountryLabel);
-        addBook.add(publisherInstitutionNumberLabel);
-        addBook.add(publisherTransitNumberLabel);
-        addBook.add(publisherAccountNumberLabel);
-
-        // Add fields to addBook
-        addBook.add(isbnTextField);
-        addBook.add(titleTextField);
-        addBook.add(genreTextField);
-        addBook.add(pageCountTextField);
-        addBook.add(priceTextField);
-        addBook.add(publisherPercentageTextField);
-        addBook.add(publisherIDTextField);
-        addBook.add(publisherNameTextField);
-        addBook.add(publisherEmailTextField);
-        addBook.add(publisherPhoneNumberTextField);
-        addBook.add(publisherStreetNumberTextField);
-        addBook.add(publisherStreetTextField);
-        addBook.add(publisherCityTextField);
-        addBook.add(publisherProvinceTextField);
-        addBook.add(publisherPostalCodeTextField);
-        addBook.add(publisherCountryTextField);
-        addBook.add(publisherInstitutionNumberTextField);
-        addBook.add(publisherTransitNumberTextField);
-        addBook.add(publisherAccountNumberTextField);
-
-        addBook.add(addBookButton);
-        addBook.add(clearButton);
+        addComponentsToAddEditDeleteBookTab();
 
         // Add tabs to tabbed pane
-        tabbedPane.addTab("Add Book", addBookScrollPane);
-        tabbedPane.addTab("Delete Book", deleteBook);
-        tabbedPane.addTab("Edit Book", editBook);
+        tabbedPane.addTab("Work", addEditDeleteBookScrollPane);
         tabbedPane.addTab("Reports", reports);
 
         // Add tabbed pane to container
@@ -263,6 +270,8 @@ public class OwnerViewFrame extends JFrame implements ActionListener
     public void addActionEvent()
     {
         addBookButton.addActionListener(this);
+        editBookButton.addActionListener(this);
+        deleteBookButton.addActionListener(this);
         clearButton.addActionListener(this);
     }
 
@@ -270,5 +279,28 @@ public class OwnerViewFrame extends JFrame implements ActionListener
     @Override
     public void actionPerformed(ActionEvent event)
     {
+        // Handle add button event
+        if (event.getSource() == addBookButton)
+        {
+            System.out.println("Adding book...");
+        }
+
+        // Handle edit button event
+        if (event.getSource() == editBookButton)
+        {
+            System.out.println("Editing book...");
+        }
+
+        // Handle delete button event
+        if (event.getSource() == deleteBookButton)
+        {
+            System.out.println("Deleting book...");
+        }
+
+        // Handle clear button event
+        if (event.getSource() == clearButton)
+        {
+            System.out.println("Clearing details...");
+        }
     }
 }
