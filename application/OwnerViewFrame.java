@@ -68,7 +68,7 @@ public class OwnerViewFrame extends JFrame implements ActionListener
     JTextField publisherCityTextField = new JTextField();
     JTextField publisherProvinceTextField = new JTextField();
 
-    MaskFormatter postalCodeMask = createFormatter("#?# ?#?", '_');
+    MaskFormatter postalCodeMask = createFormatter("#?#?#?", '_');
     JFormattedTextField publisherPostalCodeTextField = new JFormattedTextField(postalCodeMask);
     JTextField publisherCountryTextField = new JTextField();
 
