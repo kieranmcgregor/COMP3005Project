@@ -1,3 +1,9 @@
+/*  
+ *  COMP3005 F21 Project
+ *  Kieran McGregor
+ *  101098640
+ */
+
 import javax.swing.*;
 
 public class OwnerView

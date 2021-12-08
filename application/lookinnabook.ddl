@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS bank_account (
     transit_number NUMERIC(5,0),
     account_number NUMERIC(12,0),
     balance NUMERIC(12,2),
+    PRIMARY KEY (institution_number, transit_number, account_number),
     ID INTEGER REFERENCES publisher(ID) ON DELETE CASCADE
 );
 
@@ -140,12 +141,14 @@ CREATE TABLE order_addresses (
 
 CREATE TABLE adds (
     username VARCHAR(255) REFERENCES owner(username) ON DELETE CASCADE,
-    ISBN VARCHAR(15) REFERENCES books(ISBN) ON DELETE CASCADE
+    ISBN VARCHAR(15) REFERENCES books(ISBN) ON DELETE CASCADE,
+    PRIMARY KEY (username, ISBN)
 );
 
 CREATE TABLE authors (
     ID INTEGER REFERENCES author(ID) ON DELETE CASCADE,
-    ISBN VARCHAR(15) REFERENCES books(ISBN) ON DELETE CASCADE
+    ISBN VARCHAR(15) REFERENCES books(ISBN) ON DELETE CASCADE,
+    PRIMARY KEY (ID, ISBN)
 );
 
 CREATE TABLE selects (

@@ -1,3 +1,9 @@
+/*  
+ *  COMP3005 F21 Project
+ *  Kieran McGregor
+ *  101098640
+ */
+
 import java.text.*;
 import java.util.Locale;
 
@@ -7,6 +13,8 @@ import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import java.util.ArrayList;
 
 public class OwnerViewFrame extends JFrame implements ActionListener
 {
@@ -28,6 +36,8 @@ public class OwnerViewFrame extends JFrame implements ActionListener
     JLabel pageCountLabel = new JLabel("Page count:");
     JLabel priceLabel = new JLabel("Price:");
     JLabel publisherPercentageLabel = new JLabel("Publisher percentage:");
+    JLabel quantityLabel = new JLabel("Quantity:");
+    JLabel thresholdLabel = new JLabel("Threshold:");
     JLabel publisherIDLabel = new JLabel("Publisher ID:");
     JLabel publisherNameLabel = new JLabel("Publisher name:");
     JLabel publisherEmailLabel = new JLabel("Publisher email:");
@@ -40,7 +50,7 @@ public class OwnerViewFrame extends JFrame implements ActionListener
     JLabel publisherCountryLabel = new JLabel("Publisher country:");
     JLabel publisherInstitutionNumberLabel = new JLabel("Publisher institution number:");
     JLabel publisherTransitNumberLabel = new JLabel("Publisher transit number:");
-    JLabel publisherAccountNumberLabel = new JLabel("Publisher transit number:");
+    JLabel publisherAccountNumberLabel = new JLabel("Publisher acount number:");
 
     MaskFormatter isbnMask = createFormatter("###-#-##-######-#", '_');
     JFormattedTextField isbnTextField = new JFormattedTextField(isbnMask);
@@ -56,6 +66,8 @@ public class OwnerViewFrame extends JFrame implements ActionListener
 
     NumberFormat percentageFormat = NumberFormat.getPercentInstance();
     JFormattedTextField publisherPercentageTextField = new JFormattedTextField(percentageFormat);
+    JFormattedTextField quantityTextField = new JFormattedTextField(amountFormat);
+    JFormattedTextField thresholdTextField = new JFormattedTextField(amountFormat);
 
     JFormattedTextField publisherIDTextField = new JFormattedTextField(amountFormat);
     JTextField publisherNameTextField = new JTextField();
@@ -68,7 +80,7 @@ public class OwnerViewFrame extends JFrame implements ActionListener
     JTextField publisherCityTextField = new JTextField();
     JTextField publisherProvinceTextField = new JTextField();
 
-    MaskFormatter postalCodeMask = createFormatter("#?#?#?", '_');
+    MaskFormatter postalCodeMask = createFormatter("?#?#?#", '_');
     JFormattedTextField publisherPostalCodeTextField = new JFormattedTextField(postalCodeMask);
     JTextField publisherCountryTextField = new JTextField();
 
@@ -132,19 +144,21 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         pageCountLabel.setBounds(175, 130, 150, 30);
         priceLabel.setBounds(175, 165, 150, 30);
         publisherPercentageLabel.setBounds(175, 200, 150, 30);
-        publisherIDLabel.setBounds(175, 235, 150, 30);
-        publisherNameLabel.setBounds(175, 270, 150, 30);
-        publisherEmailLabel.setBounds(175, 305, 150, 30);
-        publisherPhoneNumberLabel.setBounds(175, 340, 150, 30);
-        publisherStreetNumberLabel.setBounds(175, 375, 150, 30);
-        publisherStreetLabel.setBounds(175, 410, 150, 30);
-        publisherCityLabel.setBounds(175, 445, 150, 30);
-        publisherProvinceLabel.setBounds(175, 480, 150, 30);
-        publisherPostalCodeLabel.setBounds(175, 515, 150, 30);
-        publisherCountryLabel.setBounds(175, 550, 150, 30);
-        publisherInstitutionNumberLabel.setBounds(175, 585, 150, 30);
-        publisherTransitNumberLabel.setBounds(175, 620, 150, 30);
-        publisherAccountNumberLabel.setBounds(175, 655, 150, 30);
+        quantityLabel.setBounds(175, 235, 150, 30);
+        thresholdLabel.setBounds(175, 270, 150, 30);
+        publisherIDLabel.setBounds(175, 305, 150, 30);
+        publisherNameLabel.setBounds(175, 340, 150, 30);
+        publisherEmailLabel.setBounds(175, 375, 150, 30);
+        publisherPhoneNumberLabel.setBounds(175, 410, 150, 30);
+        publisherStreetNumberLabel.setBounds(175, 445, 150, 30);
+        publisherStreetLabel.setBounds(175, 480, 150, 30);
+        publisherCityLabel.setBounds(175, 515, 150, 30);
+        publisherProvinceLabel.setBounds(175, 550, 150, 30);
+        publisherPostalCodeLabel.setBounds(175, 585, 150, 30);
+        publisherCountryLabel.setBounds(175, 620, 150, 30);
+        publisherInstitutionNumberLabel.setBounds(175, 655, 150, 30);
+        publisherTransitNumberLabel.setBounds(175, 690, 150, 30);
+        publisherAccountNumberLabel.setBounds(175, 725, 150, 30);
 
         isbnTextField.setBounds(350, 25, 150, 30);
         titleTextField.setBounds(350, 60, 150, 30);
@@ -152,24 +166,26 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         pageCountTextField.setBounds(350, 130, 150, 30);
         priceTextField.setBounds(350, 165, 150, 30);
         publisherPercentageTextField.setBounds(350, 200, 150, 30);
-        publisherIDTextField.setBounds(350, 235, 150, 30);
-        publisherNameTextField.setBounds(350, 270, 150, 30);
-        publisherEmailTextField.setBounds(350, 305, 150, 30);
-        publisherPhoneNumberTextField.setBounds(350, 340, 150, 30);
-        publisherStreetNumberTextField.setBounds(350, 375, 150, 30);
-        publisherStreetTextField.setBounds(350, 410, 150, 30);
-        publisherCityTextField.setBounds(350, 445, 150, 30);
-        publisherProvinceTextField.setBounds(350, 480, 150, 30);
-        publisherPostalCodeTextField.setBounds(350, 515, 150, 30);
-        publisherCountryTextField.setBounds(350, 550, 150, 30);
-        publisherInstitutionNumberTextField.setBounds(350, 585, 150, 30);
-        publisherTransitNumberTextField.setBounds(350, 620, 150, 30);
-        publisherAccountNumberTextField.setBounds(350, 655, 150, 30);
+        quantityTextField.setBounds(350, 235, 150, 30);
+        thresholdTextField.setBounds(350, 270, 150, 30);
+        publisherIDTextField.setBounds(350, 305, 150, 30);
+        publisherNameTextField.setBounds(350, 340, 150, 30);
+        publisherEmailTextField.setBounds(350, 375, 150, 30);
+        publisherPhoneNumberTextField.setBounds(350, 410, 150, 30);
+        publisherStreetNumberTextField.setBounds(350, 445, 150, 30);
+        publisherStreetTextField.setBounds(350, 480, 150, 30);
+        publisherCityTextField.setBounds(350, 515, 150, 30);
+        publisherProvinceTextField.setBounds(350, 550, 150, 30);
+        publisherPostalCodeTextField.setBounds(350, 585, 150, 30);
+        publisherCountryTextField.setBounds(350, 620, 150, 30);
+        publisherInstitutionNumberTextField.setBounds(350, 655, 150, 30);
+        publisherTransitNumberTextField.setBounds(350, 690, 150, 30);
+        publisherAccountNumberTextField.setBounds(350, 725, 150, 30);
 
-        addBookButton.setBounds(75, 690, 100, 30);
-        editBookButton.setBounds(225, 690, 100, 30);
-        deleteBookButton.setBounds(375, 690, 100, 30);
-        clearButton.setBounds(525, 690, 100, 30);
+        addBookButton.setBounds(75, 760, 100, 30);
+        editBookButton.setBounds(225, 760, 100, 30);
+        deleteBookButton.setBounds(375, 760, 100, 30);
+        clearButton.setBounds(525, 760, 100, 30);
     }
 
     public void setUniqueAttributes()
@@ -184,6 +200,8 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         pageCountLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         priceLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         publisherPercentageLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        quantityLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        thresholdLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         publisherIDLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         publisherNameLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         publisherEmailLabel.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -200,7 +218,7 @@ public class OwnerViewFrame extends JFrame implements ActionListener
 
         // Set addBook vertical scroll
         addEditDeleteBookScrollPane.setPreferredSize(new Dimension(400, 440));
-        addEditDeleteBook.setPreferredSize(new Dimension(400, 745));
+        addEditDeleteBook.setPreferredSize(new Dimension(400, 815));
     }
 
     public void addComponentsToAddEditDeleteBookTab()
@@ -212,6 +230,8 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         addEditDeleteBook.add(pageCountLabel);
         addEditDeleteBook.add(priceLabel);
         addEditDeleteBook.add(publisherPercentageLabel);
+        addEditDeleteBook.add(quantityLabel);
+        addEditDeleteBook.add(thresholdLabel);
         addEditDeleteBook.add(publisherIDLabel);
         addEditDeleteBook.add(publisherNameLabel);
         addEditDeleteBook.add(publisherEmailLabel);
@@ -233,6 +253,8 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         addEditDeleteBook.add(pageCountTextField);
         addEditDeleteBook.add(priceTextField);
         addEditDeleteBook.add(publisherPercentageTextField);
+        addEditDeleteBook.add(quantityTextField);
+        addEditDeleteBook.add(thresholdTextField);
         addEditDeleteBook.add(publisherIDTextField);
         addEditDeleteBook.add(publisherNameTextField);
         addEditDeleteBook.add(publisherEmailTextField);
@@ -279,10 +301,41 @@ public class OwnerViewFrame extends JFrame implements ActionListener
     @Override
     public void actionPerformed(ActionEvent event)
     {
+        ArrayList<String> bookDetails = new ArrayList<String>();
+        ArrayList<String> publisherDetails = new ArrayList<String>();
+        ArrayList<String> bankAccountDetails = new ArrayList<String>();
+
+        bookDetails.add(isbnTextField.getText().trim());
+        bookDetails.add(titleTextField.getText().trim());
+        bookDetails.add(genreTextField.getText().trim());
+        bookDetails.add(pageCountTextField.getText().trim());
+        bookDetails.add(priceTextField.getText().trim());
+        bookDetails.add(publisherPercentageTextField.getText().trim());
+        bookDetails.add(quantityTextField.getText().trim());
+        bookDetails.add(thresholdTextField.getText().trim());
+
+        publisherDetails.add(publisherIDTextField.getText().trim());
+        publisherDetails.add(publisherNameTextField.getText().trim());
+        publisherDetails.add(publisherEmailTextField.getText().trim());
+        publisherDetails.add(publisherPhoneNumberTextField.getText().trim());
+        publisherDetails.add(publisherStreetNumberTextField.getText().trim());
+        publisherDetails.add(publisherStreetTextField.getText().trim());
+        publisherDetails.add(publisherCityTextField.getText().trim());
+        publisherDetails.add(publisherProvinceTextField.getText().trim());
+        publisherDetails.add(publisherPostalCodeTextField.getText().trim());
+        publisherDetails.add(publisherCountryTextField.getText().trim());
+
+        bankAccountDetails.add(publisherInstitutionNumberTextField.getText().trim());
+        bankAccountDetails.add(publisherTransitNumberTextField.getText().trim());
+        bankAccountDetails.add(publisherAccountNumberTextField.getText().trim());
+        bankAccountDetails.add(publisherIDTextField.getText().trim());
+
         // Handle add button event
         if (event.getSource() == addBookButton)
         {
             System.out.println("Adding book...");
+
+            CallDB.addBook(bookDetails, publisherDetails, bankAccountDetails);
         }
 
         // Handle edit button event
