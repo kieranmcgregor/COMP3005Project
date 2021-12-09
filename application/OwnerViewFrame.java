@@ -84,7 +84,7 @@ public class OwnerViewFrame extends JFrame implements ActionListener
     JFormattedTextField thresholdTextField = new JFormattedTextField(amountFormat);
 
     // Create author text fields
-    JTextField authorIDsTextField = new JTextField();
+    JFormattedTextField authorIDsTextField = new JFormattedTextField(amountFormat);
     JTextField authorFirstNameTextField = new JTextField();
     JTextField authorMiddleNameTextField = new JTextField();
     JTextField authorLastNameTextField = new JTextField();
@@ -98,7 +98,7 @@ public class OwnerViewFrame extends JFrame implements ActionListener
     
     MaskFormatter phoneNumberMask = createFormatter("##-###-###-####", '_');
     JFormattedTextField publisherPhoneNumberTextField = new JFormattedTextField(phoneNumberMask);
-    JFormattedTextField publisherStreetNumberTextField = new JFormattedTextField(amountFormat);
+    JTextField publisherStreetNumberTextField = new JTextField();
     JTextField publisherStreetTextField = new JTextField();
     JTextField publisherCityTextField = new JTextField();
     JTextField publisherProvinceTextField = new JTextField();
@@ -494,6 +494,16 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         clearBankAccount();
     }
 
+    public String convertFieldValue(JFormattedTextField fieldForConversion)
+    {
+        if (!fieldForConversion.getText().trim().isEmpty())
+        {
+            return fieldForConversion.getValue().toString();
+        }
+
+        return fieldForConversion.getText().trim();
+    }
+
     // Override action performed
     @Override
     public void actionPerformed(ActionEvent event)
@@ -508,13 +518,14 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         bookDetails.add(isbnTextField.getText().trim());
         bookDetails.add(titleTextField.getText().trim());
         bookDetails.add(genreTextField.getText().trim());
-        bookDetails.add(pageCountTextField.getText().trim());
-        bookDetails.add(priceTextField.getText().trim());
-        bookDetails.add(publisherPercentageTextField.getText().trim());
-        bookDetails.add(quantityTextField.getText().trim());
-        bookDetails.add(thresholdTextField.getText().trim());
+        bookDetails.add(convertFieldValue(pageCountTextField));
+        bookDetails.add(convertFieldValue(priceTextField));
+        bookDetails.add(convertFieldValue(publisherPercentageTextField));
+        bookDetails.add(convertFieldValue(quantityTextField));
+        bookDetails.add(convertFieldValue(thresholdTextField));
+        bookDetails.add(convertFieldValue(publisherIDTextField));
 
-        authorDetails.add(authorIDsTextField.getText().trim());
+        authorDetails.add(convertFieldValue(authorIDsTextField));
         authorDetails.add(authorFirstNameTextField.getText().trim());
         authorDetails.add(authorMiddleNameTextField.getText().trim());
         authorDetails.add(authorLastNameTextField.getText().trim());
@@ -537,12 +548,17 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         bankAccountDetails.add(publisherInstitutionNumberTextField.getText().trim());
         bankAccountDetails.add(publisherTransitNumberTextField.getText().trim());
         bankAccountDetails.add(publisherAccountNumberTextField.getText().trim());
-        bankAccountDetails.add(publisherIDTextField.getText().trim());
+        bankAccountDetails.add(convertFieldValue(publisherIDTextField));
 
         // Handle add author button event
         if (event.getSource() == addAuthorButton)
         {
-            CallDB.checkAndAddAuthor(authorDetails);
+            Integer authorId = CallDB.checkAndAddAuthor(authorDetails);
+
+            if (authorId > 0)
+            {
+                authorIDsTextField.setText(authorId.toString());
+            }
         }
 
         // Handle edit author button event
@@ -560,15 +576,29 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         // Handle add address button event
         if (event.getSource() == addAddressButton)
         {
-            CallDB.checkAndAddProvinceDetails(provinceDetails);
-            CallDB.checkAndAddStreetDetails(streetDetails);
+            if (CallDB.checkAndAddProvinceDetails(provinceDetails)
+                && CallDB.checkAndAddStreetDetails(streetDetails))
+            {
+                System.out.println("Address added!");
+            }
+            else
+            {
+                System.out.println("ERROR: Address not added!");
+            }
         }
 
         // Handle edit address button event
         if (event.getSource() == editAddressButton)
         {
-            CallDB.checkAndEditProvinceDetails(provinceDetails);
-            CallDB.checkAndEditStreetDetails(streetDetails);
+            if (CallDB.checkAndEditProvinceDetails(provinceDetails)
+                && CallDB.checkAndEditStreetDetails(streetDetails))
+            {
+                System.out.println("Address edited!");
+            }
+            else
+            {
+                System.out.println("ERROR: Address not edited!");
+            }
         }
 
         // Handle clear address button event
@@ -580,7 +610,12 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         // Handle add publisher button event
         if (event.getSource() == addPublisherButton)
         {
-            CallDB.checkAndAddPublisher(publisherDetails);
+            Integer publisherId = CallDB.checkAndAddPublisher(publisherDetails, streetDetails);
+
+            if (publisherId > 0)
+            {
+                publisherIDTextField.setText(publisherId.toString());
+            }
         }
 
         // Handle edit publisher button event
