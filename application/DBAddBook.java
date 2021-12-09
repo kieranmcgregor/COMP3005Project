@@ -9,13 +9,14 @@ import java.sql.*;
 import java.util.*;
 import java.math.*;
 
-public class CallDB
+public class DBAddBook
 {
     static private final String DB_URL = "jdbc:postgresql://localhost:5433/lookinnabook";
     static private final String USER = "postgres";
     static private final String PW = "S##+d57750!9";
     static private final String BOOK_QUERY = "SELECT * FROM books";
     static private final String BOOK_CREATE = "INSERT INTO books(isbn, title, genre, page_count, price, publisher_percentage, quantity, threshold, publisher_id, warehouse_id) VALUES(?,?,?,?,?,?,?,?,?,1)";
+    static private final String BOOK_DELETE = "DELETE FROM books WHERE isbn=?";
     static private final String AUTHORS_QUERY = "SELECT * FROM authors";
     static private final String AUTHORS_CREATE = "INSERT INTO authors(id, isbn) VALUES(?,?)";
     static private final String AUTHOR_QUERY = "SELECT * FROM author";
@@ -193,7 +194,7 @@ public class CallDB
             Connection conn = DriverManager.getConnection(DB_URL, USER, PW);
             PreparedStatement prepStmt = conn.prepareStatement(prepared_statement);
 
-            for (int i = 0; i < stringIntFlag.length; ++i)
+            for (int i = 0; i < entityDetails.size(); ++i)
             {
                 System.out.println(entityDetails.get(i));
                 if (stringIntFlag[i] == 0)
@@ -218,6 +219,30 @@ public class CallDB
             e.printStackTrace();
         }
         return false;
+    }
+
+    protected static Integer deleteItem(String prepared_statement, String isbn)
+    {
+        try
+        {
+            Connection conn = DriverManager.getConnection(DB_URL, USER, PW);
+            PreparedStatement prepStmt = conn.prepareStatement(prepared_statement);
+            prepStmt.setString(1, isbn);
+            int row = prepStmt.executeUpdate();
+
+            Class.forName("org.postgresql.Driver");
+
+            return row;
+        }
+        catch (ClassNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return -1;
     }
 
     public static Boolean provinceDetailsExist(ArrayList<String> provinceDetails)
@@ -485,6 +510,7 @@ public class CallDB
             changeMask[attributeValues.size()] = fullMask[fullMask.length-1];
             attributeValues.add(authorDetails.get(0));
             preparedStatement += " WHERE ID=?";
+            System.out.println(preparedStatement);
             updateItem(attributeValues, preparedStatement, changeMask);
             return true;
         }
@@ -611,12 +637,10 @@ public class CallDB
         }
     }
 
-    public static Boolean deleteBook(ArrayList<String> bookDetails
-                                    , ArrayList<String> publisherDetails
-                                    , ArrayList<String> bankAccountDetails)
+    public static Boolean deleteBook(String isbn)
     {
-        System.out.println("Editing book in DB...");
-        return true;
+        System.out.println("Deleting book in DB...");
+        return deleteItem(BOOK_DELETE, isbn) >= 0;
     }
 
     /*

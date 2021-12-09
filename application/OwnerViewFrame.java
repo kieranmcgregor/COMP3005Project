@@ -553,7 +553,7 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         // Handle add author button event
         if (event.getSource() == addAuthorButton)
         {
-            Integer authorId = CallDB.checkAndAddAuthor(authorDetails);
+            Integer authorId = DBAddBook.checkAndAddAuthor(authorDetails);
 
             if (authorId > 0)
             {
@@ -564,7 +564,7 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         // Handle edit author button event
         if (event.getSource() == editAuthorButton)
         {
-            CallDB.checkAndEditAuthor(authorDetails);
+            DBAddBook.checkAndEditAuthor(authorDetails);
         }
 
         // Handle clear author button event
@@ -576,8 +576,8 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         // Handle add address button event
         if (event.getSource() == addAddressButton)
         {
-            if (CallDB.checkAndAddProvinceDetails(provinceDetails)
-                && CallDB.checkAndAddStreetDetails(streetDetails))
+            if (DBAddBook.checkAndAddProvinceDetails(provinceDetails)
+                && DBAddBook.checkAndAddStreetDetails(streetDetails))
             {
                 System.out.println("Address added!");
             }
@@ -590,8 +590,8 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         // Handle edit address button event
         if (event.getSource() == editAddressButton)
         {
-            if (CallDB.checkAndEditProvinceDetails(provinceDetails)
-                && CallDB.checkAndEditStreetDetails(streetDetails))
+            if (DBAddBook.checkAndEditProvinceDetails(provinceDetails)
+                && DBAddBook.checkAndEditStreetDetails(streetDetails))
             {
                 System.out.println("Address edited!");
             }
@@ -610,7 +610,7 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         // Handle add publisher button event
         if (event.getSource() == addPublisherButton)
         {
-            Integer publisherId = CallDB.checkAndAddPublisher(publisherDetails, streetDetails);
+            Integer publisherId = DBAddBook.checkAndAddPublisher(publisherDetails, streetDetails);
 
             if (publisherId > 0)
             {
@@ -621,7 +621,7 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         // Handle edit publisher button event
         if (event.getSource() == editPublisherButton)
         {
-            CallDB.checkAndEditPublisher(publisherDetails);
+            DBAddBook.checkAndEditPublisher(publisherDetails);
         }
 
         // Handle clear publisher button event
@@ -633,13 +633,13 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         // Handle add bank account button event
         if (event.getSource() == addBankAccountButton)
         {
-            CallDB.checkAndAddBankAccount(bankAccountDetails);
+            DBAddBook.checkAndAddBankAccount(bankAccountDetails);
         }
 
         // Handle edit bank account button event
         if (event.getSource() == editBankAccountButton)
         {
-            CallDB.checkAndEditBankAccount(bankAccountDetails);
+            DBAddBook.checkAndEditBankAccount(bankAccountDetails);
         }
 
         // Handle clear bank account button event
@@ -651,7 +651,7 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         // Handle add button event
         if (event.getSource() == addBookButton)
         {
-            CallDB.checkAndAddAllBookDetails(provinceDetails
+            DBAddBook.checkAndAddAllBookDetails(provinceDetails
                                                 , streetDetails
                                                 , publisherDetails
                                                 , bankAccountDetails
@@ -669,6 +669,7 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         if (event.getSource() == deleteBookButton)
         {
             System.out.println("Deleting book...");
+            DBAddBook.deleteBook(bookDetails.get(0));
         }
 
         // Handle clear button event
