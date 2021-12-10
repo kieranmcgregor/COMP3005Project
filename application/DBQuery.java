@@ -26,6 +26,14 @@ public class DBQuery
     static public final String BANK_ACCOUNT_QUERY = "SELECT * FROM bank_account";
     static public final String OWNER_QUERY = "SELECT * FROM owner";
     static public final String USER_QUERY = "SELECT * FROM users";
+    static public final String SUPER_SELECTS_QUERY = "SELECT books.isbn,selects.quantity,title,genre,page_count,price"+
+                                                        ",first_name,middle_name,last_name,name"+
+                                                        " FROM ((books INNER JOIN selects ON books.isbn=selects.isbn)"+
+                                                                " INNER JOIN (publisher NATURAL JOIN provincial_area)"+
+                                                                    " ON books.publisher_id = publisher.id)"+
+                                                            " INNER JOIN (authors NATURAL JOIN author)"+
+                                                                " ON books.isbn = authors.isbn"+
+                                                        " WHERE selects.username=?";
     static public final String SELECTS_QUERY = "SELECT * FROM selects";
 
     /*
@@ -466,8 +474,20 @@ public class DBQuery
     }
 
     /*
+    Function:   getAllSelectedBooksOfCriteria
+    Purpose:    query the DB for all books given a certain search criteria
+    in:         runningList (running list of books found)
+    return:     runningList (with any newly found books added)
+    */
+    public static ArrayList<ArrayList<String>> getAllSelectedBooksOfCriteria(ArrayList<String> selectionDetails)
+    {
+        String prepared_selects_query = SUPER_SELECTS_QUERY;
+        return getAllEntriesOfCriteria(selectionDetails, prepared_selects_query, new int[]{0});
+    }
+
+    /*
     Function:   getAllBooksOfCriteria
-    Purpose:    query the DB for all books
+    Purpose:    query the DB for all books given a certain search criteria
     in:         runningList (running list of books found)
     return:     runningList (with any newly found books added)
     */

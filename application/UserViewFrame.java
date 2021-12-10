@@ -16,6 +16,8 @@ import java.awt.event.ActionListener;
 
 public class UserViewFrame extends JFrame implements ActionListener
 {
+    ArrayList<Component> bookResults = new ArrayList<Component>();
+    ArrayList<Component> selectedResults = new ArrayList<Component>();
     Container container = getContentPane();
     JTabbedPane tabbedPane = new JTabbedPane();
     JLabel pageTitleLabel = new JLabel("LookInnaBook: User");
@@ -23,6 +25,8 @@ public class UserViewFrame extends JFrame implements ActionListener
     // Create CUD tab components
     JPanel searchPane = new JPanel();
     JScrollPane searchScrollPane = new JScrollPane(searchPane);
+    JPanel orderPane = new JPanel();
+    JScrollPane orderScrollPane = new JScrollPane(orderPane);
 
     // Create work tab labels
     // Create Book labels
@@ -87,6 +91,44 @@ public class UserViewFrame extends JFrame implements ActionListener
     JButton searchButton = new JButton("Search");
     JButton clearButton = new JButton("Clear Criteria");
 
+    // Order Pane components
+    // Create shipping labels
+    JLabel shippingStreetNumberLabel = new JLabel("Shipping street number:");
+    JLabel shippingStreetLabel = new JLabel("Shipping street:");
+    JLabel shippingCityLabel = new JLabel("Shipping city:");
+    JLabel shippingProvinceLabel = new JLabel("Shipping province:");
+    JLabel shippingPostalCodeLabel = new JLabel("Shipping postal code:");
+    JLabel shippingCountryLabel = new JLabel("Shipping country:");
+
+    // Create shipping Fields
+    JTextField shippingStreetNumberTextField = new JTextField();
+    JTextField shippingStreetTextField = new JTextField();
+    JTextField shippingCityTextField = new JTextField();
+    JTextField shippingProvinceTextField = new JTextField();
+    JFormattedTextField shippingPostalCodeTextField = new JFormattedTextField(postalCodeMask);
+    JTextField shippingCountryTextField = new JTextField();
+
+    // Create billing labels
+    JLabel billingStreetNumberLabel = new JLabel("Billing street number:");
+    JLabel billingStreetLabel = new JLabel("Billing street:");
+    JLabel billingCityLabel = new JLabel("Billing city:");
+    JLabel billingProvinceLabel = new JLabel("Billing province:");
+    JLabel billingPostalCodeLabel = new JLabel("Billing postal code:");
+    JLabel billingCountryLabel = new JLabel("Billing country:");
+
+    // Create billing Fields
+    JTextField billingStreetNumberTextField = new JTextField();
+    JTextField billingStreetTextField = new JTextField();
+    JTextField billingCityTextField = new JTextField();
+    JTextField billingProvinceTextField = new JTextField();
+    JFormattedTextField billingPostalCodeTextField = new JFormattedTextField(postalCodeMask);
+    JTextField billingCountryTextField = new JTextField();
+
+    JCheckBox billingIsShipping = new JCheckBox("Billing address is same as shipping address");
+
+    JButton checkoutButton = new JButton("Checkout");
+    JButton clearOrderButton = new JButton("Clear Order");
+
     // Constructor
     UserViewFrame()
     {
@@ -98,8 +140,17 @@ public class UserViewFrame extends JFrame implements ActionListener
         setUniqueAttributes();
         addComponentsToContainer();
         addActionEvent();
+
+        displaySelectedBooks(DBQuery.getAllSelectedBooksOfCriteria(new ArrayList<>(Arrays.asList(LookInnaBook.getUsername()))));
     }
 
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    in:         
+    return:     
+    */
     protected static MaskFormatter createFormatter(final String mask, char replacementChar)
     {
         try
@@ -114,19 +165,34 @@ public class UserViewFrame extends JFrame implements ActionListener
         }
     }
 
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    in:         
+    return:     
+    */
     public void setLayoutManager()
     {
         container.setLayout(null);
 
         searchPane.setLayout(null);
+        orderPane.setLayout(null);
     }
 
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    in:         
+    return:     
+    */
     public void setLocationAndSize()
     {
         // Set location and size of each component
         pageTitleLabel.setBounds(225, 25, 500, 60);
 
-        searchScrollPane.setBounds(25, 100, 735, 440);
+        tabbedPane.setBounds(25, 100, 735, 440);
 
         // Position the work tab components
         // Position book labels
@@ -179,10 +245,56 @@ public class UserViewFrame extends JFrame implements ActionListener
         publisherPostalCodeTextField.setBounds(535, 270, 150, 30);
         publisherCountryTextField.setBounds(535, 305, 150, 30);
 
-        searchButton.setBounds(210, 355, 150, 30);
-        clearButton.setBounds(410, 355, 150, 30);
+        searchButton.setBounds(200, 355, 150, 30);
+        clearButton.setBounds(400, 355, 150, 30);
+
+        // Order Tab
+        // Position shipping address labels
+        shippingStreetNumberLabel.setBounds(10, 25, 150, 30);
+        shippingStreetLabel.setBounds(10, 60, 150, 30);
+        shippingCityLabel.setBounds(10, 95, 150, 30);
+        shippingProvinceLabel.setBounds(10, 130, 150, 30);
+        shippingPostalCodeLabel.setBounds(10, 165, 150, 30);
+        shippingCountryLabel.setBounds(10, 200, 150, 30);
+
+        // Position shipping address fields
+        shippingStreetNumberTextField.setBounds(185, 25, 150, 30);
+        shippingStreetTextField.setBounds(185, 60, 150, 30);
+        shippingCityTextField.setBounds(185, 95, 150, 30);
+        shippingProvinceTextField.setBounds(185, 130, 150, 30);
+        shippingPostalCodeTextField.setBounds(185, 165, 150, 30);
+        shippingCountryTextField.setBounds(185, 200, 150, 30);
+
+        // position shipping = billing checkbox
+        billingIsShipping.setBounds(25, 235, 300, 30);
+
+        // Position billing address labels
+        billingStreetNumberLabel.setBounds(360, 25, 150, 30);
+        billingStreetLabel.setBounds(360, 60, 150, 30);
+        billingCityLabel.setBounds(360, 95, 150, 30);
+        billingProvinceLabel.setBounds(360, 130, 150, 30);
+        billingPostalCodeLabel.setBounds(360, 165, 150, 30);
+        billingCountryLabel.setBounds(360, 200, 150, 30);
+
+        // Position billing address fields
+        billingStreetNumberTextField.setBounds(535, 25, 150, 30);
+        billingStreetTextField.setBounds(535, 60, 150, 30);
+        billingCityTextField.setBounds(535, 95, 150, 30);
+        billingProvinceTextField.setBounds(535, 130, 150, 30);
+        billingPostalCodeTextField.setBounds(535, 165, 150, 30);
+        billingCountryTextField.setBounds(535, 200, 150, 30);
+
+        checkoutButton.setBounds(200, 285, 150, 30);
+        clearOrderButton.setBounds(400, 285, 150, 30);
     }
 
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    in:         
+    return:     
+    */
     public void setUniqueAttributes()
     {
         // Set title font and size
@@ -211,11 +323,38 @@ public class UserViewFrame extends JFrame implements ActionListener
         publisherPostalCodeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         publisherCountryLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
+        // Flood shipping labels right
+        shippingStreetNumberLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        shippingStreetLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        shippingCityLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        shippingProvinceLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        shippingPostalCodeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        shippingCountryLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+
+        // Flood billing labels right
+        billingStreetNumberLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        billingStreetLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        billingCityLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        billingProvinceLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        billingPostalCodeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        billingCountryLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+
         // Set addBook vertical scroll
-        searchPane.setPreferredSize(new Dimension(400, 1100));
-        searchScrollPane.setPreferredSize(new Dimension(400, 440));
+        searchPane.setPreferredSize(new Dimension(700, 410));
+        searchScrollPane.setPreferredSize(new Dimension(700, 400));
+
+        // Set addBook vertical scroll
+        orderPane.setPreferredSize(new Dimension(700, 410));
+        orderScrollPane.setPreferredSize(new Dimension(700, 400));
     }
 
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    in:         
+    return:     
+    */
     public void addComponentsToTopPane()
     {
         // Add book labels to work tab
@@ -267,7 +406,53 @@ public class UserViewFrame extends JFrame implements ActionListener
 
         searchPane.add(searchButton);
         searchPane.add(clearButton);
+
+        // Add shipping address fields
+        orderPane.add(shippingStreetNumberLabel);
+        orderPane.add(shippingStreetLabel);
+        orderPane.add(shippingCityLabel);
+        orderPane.add(shippingProvinceLabel);
+        orderPane.add(shippingPostalCodeLabel);
+        orderPane.add(shippingCountryLabel);
+
+        // Add shipping address fields
+        orderPane.add(shippingStreetNumberTextField);
+        orderPane.add(shippingStreetTextField);
+        orderPane.add(shippingCityTextField);
+        orderPane.add(shippingProvinceTextField);
+        orderPane.add(shippingPostalCodeTextField);
+        orderPane.add(shippingCountryTextField);
+
+        // Add shipping = billing address checkbox
+        orderPane.add(billingIsShipping);
+
+        // Add billing address fields
+        orderPane.add(billingStreetNumberLabel);
+        orderPane.add(billingStreetLabel);
+        orderPane.add(billingCityLabel);
+        orderPane.add(billingProvinceLabel);
+        orderPane.add(billingPostalCodeLabel);
+        orderPane.add(billingCountryLabel);
+
+        // Add billing address fields
+        orderPane.add(billingStreetNumberTextField);
+        orderPane.add(billingStreetTextField);
+        orderPane.add(billingCityTextField);
+        orderPane.add(billingProvinceTextField);
+        orderPane.add(billingPostalCodeTextField);
+        orderPane.add(billingCountryTextField);
+
+        orderPane.add(checkoutButton);
+        orderPane.add(clearOrderButton);
     }
+
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    in:         
+    return:     
+    */
     public void addComponentsToContainer()
     {
         // Add components to view
@@ -275,17 +460,39 @@ public class UserViewFrame extends JFrame implements ActionListener
 
         addComponentsToTopPane();
 
+        // Add tabs to tabbed pane
+        tabbedPane.addTab("Search", searchScrollPane);
+        tabbedPane.addTab("Order", orderScrollPane);
+
         // Add search and results pane to container
         // container.add(searchPane);
-        container.add(searchScrollPane);
+        container.add(tabbedPane);
     }
 
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    in:         
+    return:     
+    */
     public void addActionEvent()
     {
         searchButton.addActionListener(this);
         clearButton.addActionListener(this);
+
+        checkoutButton.addActionListener(this);
+        clearOrderButton.addActionListener(this);
+        billingIsShipping.addActionListener(this);
     }
 
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    in:         
+    return:     
+    */
     public void clearAuthor()
     {
         authorFirstNameTextField.setText("");
@@ -293,6 +500,13 @@ public class UserViewFrame extends JFrame implements ActionListener
         authorLastNameTextField.setText("");
     }
 
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    in:         
+    return:     
+    */
     public void clearAddress()
     {
         publisherStreetNumberTextField.setText("");
@@ -303,6 +517,13 @@ public class UserViewFrame extends JFrame implements ActionListener
         publisherCountryTextField.setText("");
     }
 
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    in:         
+    return:     
+    */
     public void clearPublisher()
     {
         publisherNameTextField.setText("");
@@ -310,6 +531,13 @@ public class UserViewFrame extends JFrame implements ActionListener
         publisherPhoneNumberTextField.setText("");
     }
 
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    in:         
+    return:     
+    */
     public void clearBook()
     {
         isbnTextField.setText("");
@@ -323,6 +551,37 @@ public class UserViewFrame extends JFrame implements ActionListener
         clearPublisher();
     }
 
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    in:         
+    return:     
+    */
+    public void clearOrder()
+    {
+        shippingStreetNumberTextField.setText("");
+        shippingStreetTextField.setText("");
+        shippingCityTextField.setText("");
+        shippingProvinceTextField.setText("");
+        shippingPostalCodeTextField.setText("");
+        shippingCountryTextField.setText("");
+
+        billingStreetNumberTextField.setText("");
+        billingStreetTextField.setText("");
+        billingCityTextField.setText("");
+        billingProvinceTextField.setText("");
+        billingPostalCodeTextField.setText("");
+        billingCountryTextField.setText("");
+    }
+
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    in:         
+    return:     
+    */
     public String convertFieldValue(JFormattedTextField fieldForConversion)
     {
         if (!fieldForConversion.getText().trim().isEmpty())
@@ -333,9 +592,22 @@ public class UserViewFrame extends JFrame implements ActionListener
         return fieldForConversion.getText().trim();
     }
 
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    in:         
+    return:     
+    */
     protected void displayBooks(ArrayList<ArrayList<String>> listOfBooks)
     {
         int yPos = 410;
+
+        // Remove previous search results
+        for (Component component : bookResults)
+        {
+            searchPane.remove(component);
+        }
 
         for (int i = 0; i < listOfBooks.size(); ++i)
         {
@@ -356,29 +628,137 @@ public class UserViewFrame extends JFrame implements ActionListener
             // Build other book details
             for (int j = 1; j < bookAttributes.size(); ++j)
             {
+                if (j == 4)
+                {
+                    bookDetails += "$";
+                }
+
                 bookDetails += bookAttributes.get(j);
+
+                if (j == 3)
+                {
+                    bookDetails += " pages";
+                }
 
                 if (j < bookAttributes.size()-1)
                 {
                     bookDetails += ", ";
                 }
             }
-            JLabel roDetails = new JLabel(bookDetails + "THE END");
+            JLabel roDetails = new JLabel(bookDetails);
+            quantityField.setName(bookAttributes.get(0));
 
             // Set component bounds
-            button.setBounds(10, yPos, 150, 30);
-            quantityField.setBounds(165, yPos, 50, 30);
-            roDetails.setBounds(220, yPos, 400, 30);
+            button.setBounds(25, yPos, 150, 30);
+            quantityField.setBounds(180, yPos, 50, 30);
+            roDetails.setBounds(235, yPos, 400, 30);
 
             // Add components to search pane
             searchPane.add(button);
             searchPane.add(quantityField);
             searchPane.add(roDetails);
+
+            // Add components to array list
+            bookResults.add(button);
+            bookResults.add(quantityField);
+            bookResults.add(roDetails);
         }
 
-        // searchPane.setPreferredSize(new Dimension(400, yPos));
+        searchPane.setPreferredSize(new Dimension(400, yPos + 55));
     }
 
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    in:         
+    return:     
+    */
+    protected void displaySelectedBooks(ArrayList<ArrayList<String>> listOfBooks)
+    {
+        int yPos = 410;
+
+        // Remove previous search results
+        for (Component component : selectedResults)
+        {
+            orderPane.remove(component);
+        }
+
+        for (int i = 0; i < listOfBooks.size(); ++i)
+        {
+            System.out.println("Adding New Selected Book...");
+
+            yPos = (410 + i*35);
+            String bookDetails = new String();
+            ArrayList<String> bookAttributes = listOfBooks.get(i);
+
+            // Build buttons for book selection
+            JButton deleteButton = new JButton("Delete: " + bookAttributes.get(0));
+            deleteButton.setName(bookAttributes.get(0));
+            deleteButton.addActionListener(this);
+
+            // Build buttons for book selection
+            JButton editButton = new JButton("Edit: " + bookAttributes.get(0));
+            editButton.setName(bookAttributes.get(0));
+            editButton.addActionListener(this);
+
+            // Build quantity fields
+            JFormattedTextField quantityField = new JFormattedTextField(amountFormat);
+            quantityField.setValue(Integer.parseInt(bookAttributes.get(1)));
+            quantityField.setName(bookAttributes.get(0));
+
+            // Build other book details
+            for (int j = 2; j < bookAttributes.size(); ++j)
+            {
+                if (j == 4)
+                {
+                    bookDetails += "$";
+                }
+
+                bookDetails += bookAttributes.get(j);
+
+                if (j == 3)
+                {
+                    bookDetails += " pages";
+                }
+
+                if (j < bookAttributes.size()-1)
+                {
+                    bookDetails += ", ";
+                }
+            }
+            JLabel roDetails = new JLabel(bookDetails);
+            quantityField.setName(bookAttributes.get(0));
+
+            // Set component bounds
+            deleteButton.setBounds(25, yPos, 95, 30);
+            editButton.setBounds(125, yPos, 95, 30);
+            quantityField.setBounds(230, yPos, 50, 30);
+            roDetails.setBounds(285, yPos, 400, 30);
+
+            // Add components to order pane
+            orderPane.add(deleteButton);
+            orderPane.add(editButton);
+            orderPane.add(quantityField);
+            orderPane.add(roDetails);
+
+            // Add components to array list
+            bookResults.add(deleteButton);
+            bookResults.add(editButton);
+            bookResults.add(quantityField);
+            bookResults.add(roDetails);
+        }
+
+        orderPane.setPreferredSize(new Dimension(400, yPos + 55));
+    }
+
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    in:         
+    return:     
+    */
     // Override action performed
     @Override
     public void actionPerformed(ActionEvent event)
@@ -414,12 +794,15 @@ public class UserViewFrame extends JFrame implements ActionListener
 
            displayBooks(listOfBooks);
         }
+
         // Handle clear button event
-        else if (event.getSource() == clearButton)
+        if (event.getSource() == clearButton)
         {
             clearBook();
         }
-        else
+        
+        // Handle search list selection
+        if (event.getActionCommand().charAt(3) == '-')
         {
             String selectedISBN = event.getActionCommand();
             String quantity = "0"; 
@@ -439,6 +822,47 @@ public class UserViewFrame extends JFrame implements ActionListener
                                                                             , selectedISBN
                                                                             , quantity));
             DBUpdate.addToBasket(selectedBook);
+
+            displaySelectedBooks(DBQuery.getAllSelectedBooksOfCriteria(new ArrayList<>(Arrays.asList(LookInnaBook.getUsername()))));
+        }
+
+        // Handle search list deletion
+        if (event.getActionCommand().substring(0,7).equals("Delete:"))
+        {
+            System.out.println("Delete book " + event.getActionCommand().substring(8) + " from selects...");
+        }
+
+        // Handle search list editing
+        if (event.getActionCommand().substring(0,5).equals("Edit:"))
+        {
+            System.out.println("Edit book " + event.getActionCommand().substring(6) + " from selects...");
+        }
+
+        // Handle clear button event
+        if (event.getSource() == checkoutButton)
+        {
+            System.out.println("Checking out...");
+        }
+
+        // Handle clear button event
+        if (event.getSource() == clearOrderButton)
+        {
+            clearOrder();
+        }
+
+        // Handle billingIsShipping checkbox event
+        if (event.getSource() == billingIsShipping)
+        {
+            if (billingIsShipping.isSelected())
+            {
+                System.out.println("Shipping-->Billing");
+                billingStreetNumberTextField.setText(shippingStreetNumberTextField.getText());
+                billingStreetTextField.setText(shippingStreetTextField.getText());
+                billingCityTextField.setText(shippingCityTextField.getText());
+                billingProvinceTextField.setText(shippingProvinceTextField.getText());
+                billingPostalCodeTextField.setText(shippingPostalCodeTextField.getText());
+                billingCountryTextField.setText(shippingCountryTextField.getText());
+            }
         }
     }
 }
