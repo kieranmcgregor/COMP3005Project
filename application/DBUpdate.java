@@ -12,7 +12,15 @@ import java.math.*;
 public class DBUpdate
 {
     static private final String AUTHOR_UPDATE = "UPDATE author SET";
+    static private final String BOOK_QUANTITY_UPDATE = "UPDATE books SET quantity = quantity + ? WHERE isbn = ?";
+    static private final String SELL_BOOKS_UPDATE = "UPDATE books SET quantity = quantity - ? WHERE isbn = ?";
 
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    return:     
+    */
     protected static Boolean updateItem(ArrayList<String> entityDetails
                                         , String prepared_statement
                                         , int[] stringIntFlag)
@@ -49,6 +57,12 @@ public class DBUpdate
         return false;
     }
 
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    return:     
+    */
     protected static Boolean editAuthor(ArrayList<String> authorDetails)
     {
         System.out.println("Editing author...");
@@ -85,6 +99,12 @@ public class DBUpdate
         return false;
     }
 
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    return:     
+    */
     public static void checkAndEditAuthor(ArrayList<String> authorDetails)
     {
         if (!DBQuery.authorExists(authorDetails))
@@ -94,6 +114,62 @@ public class DBUpdate
         else
         {
             editAuthor(authorDetails);
+        }
+    }
+
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    return:     
+    */
+    public static void buyBooks(ArrayList<String> bookDetails)
+    {
+        System.out.println("Buying books...");
+        ArrayList<String> booksToOrder = new ArrayList<>(Arrays.asList(bookDetails.get(6), bookDetails.get(0)));
+        String preparedStatement = BOOK_QUANTITY_UPDATE;
+        updateItem(booksToOrder, preparedStatement, new int[]{1,0});
+    }
+
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    return:     
+    */
+    public static void checkAndBuyBooks(ArrayList<String> bookDetails)
+    {
+        if (DBQuery.bookExists(bookDetails))
+        {
+            buyBooks(bookDetails);
+        }
+    }
+
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    return:     
+    */
+    public static void sellBooks(ArrayList<String> bookDetails)
+    {
+        System.out.println("Buying books...");
+        ArrayList<String> booksToOrder = new ArrayList<>(Arrays.asList(bookDetails.get(6), bookDetails.get(0)));
+        String preparedStatement = SELL_BOOKS_UPDATE;
+        updateItem(booksToOrder, preparedStatement, new int[]{1,0});
+    }
+
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    return:     
+    */
+    public static void checkAndSellBooks(ArrayList<String> bookDetails)
+    {
+        if (DBQuery.bookExists(bookDetails))
+        {
+            buyBooks(bookDetails);
         }
     }
 }

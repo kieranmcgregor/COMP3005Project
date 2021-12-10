@@ -8,6 +8,13 @@ import javax.swing.*;
 
 public class OwnerView
 {
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    in:         
+    return:     
+    */
     public static void showOwnerView()
     {
         System.out.println("Owner View Screen...");

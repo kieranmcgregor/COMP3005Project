@@ -1,3 +1,8 @@
+/*  
+ *  COMP3005 F21 Project
+ *  Kieran McGregor
+ *  101098640
+ */
 import java.sql.*;
 
 import java.util.*;
@@ -5,6 +10,13 @@ import java.math.*;
 
 public class DBQuery
 {
+    static public final String SUPER_BOOK_QUERY = "SELECT books.isbn,title,genre,page_count,price,first_name"+
+                                                            ",middle_name,last_name,name,email,phone_number,number"+
+                                                            ",street,city,province,postal_code,country"+
+                                                        " FROM (books INNER JOIN (publisher NATURAL JOIN provincial_area)"+
+                                                                " ON books.publisher_id = publisher.id)"+
+                                                            " INNER JOIN (authors NATURAL JOIN author)"+
+                                                                " ON books.isbn = authors.isbn";
     static public final String BOOK_QUERY = "SELECT * FROM books";
     static public final String AUTHORS_QUERY = "SELECT * FROM authors";
     static public final String ADDS_QUERY = "SELECT * FROM adds";
@@ -89,6 +101,68 @@ public class DBQuery
                 {
                     queryReturnValues.add(rs.getString(i));
                 }
+            }
+
+            System.out.println("Returning");
+            return queryReturnValues;
+        }
+        catch (ClassNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return queryReturnValues;
+    }
+
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    in:         
+    return:     
+    */
+    protected static ArrayList<ArrayList<String>> getAllEntriesOfCriteria(ArrayList<String> attributeValues
+                                                                , String prepared_query
+                                                                , int[] stringIntFlag)
+    {
+        ArrayList<ArrayList<String>> queryReturnValues = new ArrayList<ArrayList<String>>();
+
+        try
+        {
+            Connection conn = DriverManager.getConnection(LookInnaBook.DB_URL, LookInnaBook.USER, LookInnaBook.PW);
+            PreparedStatement prepStmt = conn.prepareStatement(prepared_query);
+
+            for (int i = 0; i < attributeValues.size(); ++i)
+            {
+                System.out.println(attributeValues.get(i));
+                if (stringIntFlag[i] == 0)
+                {
+                    prepStmt.setString(i+1, attributeValues.get(i));
+                }
+                else
+                {
+                    prepStmt.setLong(i+1, Long.parseUnsignedLong(attributeValues.get(i)));
+                }
+            }
+
+            ResultSet rs = prepStmt.executeQuery();
+            Class.forName("org.postgresql.Driver");
+
+            while (rs.next())
+            {
+                ArrayList<String> tupleValue = new ArrayList<String>();
+                ResultSetMetaData meta = rs.getMetaData();
+                int colCount = meta.getColumnCount();
+
+                for (int i = 1; i < colCount; ++i)
+                {
+                    tupleValue.add(rs.getString(i));
+                }
+
+                queryReturnValues.add(tupleValue);
             }
 
             System.out.println("Returning");
@@ -377,54 +451,57 @@ public class DBQuery
     }
 
     /*
-    Function:   getAllBooks
+    Function:   getAllBooksOfCriteria
     Purpose:    query the DB for all books
     in:         runningList (running list of books found)
     return:     runningList (with any newly found books added)
     */
-    public static ArrayList<String> getAllBooks(ArrayList<String> runningList)
+    public static ArrayList<ArrayList<String>> getAllBooksOfCriteria(ArrayList<String> bookDetails)
     {
-        String prepared_query = BOOK_QUERY;
+        System.out.println("Serching books by criteria...");
+        String preparedStatement = SUPER_BOOK_QUERY;
+        ArrayList<String> attributeValues = new ArrayList<String>();
+        String selectAttributes = new String();
+        ArrayList<String> attributeNames = new ArrayList<>(Arrays.asList("books.isbn"
+                                                                        , "title"
+                                                                        , "genre"
+                                                                        , "page_count"
+                                                                        , "price"
+                                                                        , "first_name"
+                                                                        , "middle_name"
+                                                                        , "last_name"
+                                                                        , "name"
+                                                                        , "email"
+                                                                        , "phone_number"
+                                                                        , "number"
+                                                                        , "street"
+                                                                        , "city"
+                                                                        , "province"
+                                                                        , "postal_code"
+                                                                        , "country"));
+        int[] fullMask = new int[]{0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0};
+        int[] changeMask = new int[fullMask.length];
 
-        try
+        for (int i = 0; i < bookDetails.size(); ++i)
         {
-            Connection conn = DriverManager.getConnection(LookInnaBook.DB_URL, LookInnaBook.USER, LookInnaBook.PW);
-            PreparedStatement prepStmt = conn.prepareStatement(prepared_query);
-            ResultSet rs = prepStmt.executeQuery();
-
-            Class.forName("org.postgresql.Driver");
-
-            while(rs.next())
+            if (!bookDetails.get(i).isEmpty()
+                && bookDetails.get(i).charAt(0) != '_')
             {
-                runningList = addElementToListNoDup(rs.getString("Name"), runningList);
+                if (attributeValues.size() > 1)
+                {
+                    preparedStatement += " AND";
+                }
+                else
+                {
+                    preparedStatement += " WHERE";
+                }
+                changeMask[attributeValues.size()] = fullMask[i];
+                attributeValues.add(bookDetails.get(i));
+                preparedStatement += " " + attributeNames.get(i) +"=?";
             }
         }
-        catch (ClassNotFoundException e)
-        {
-            e.printStackTrace();
-        }
-        catch (SQLException e)
-        {
-            e.printStackTrace();
-        }
 
-        return runningList;
-    }
-
-    /*
-    Function:   addElementToListNoDup
-    Purpose:    add elements to the running list if they haven't previously been added
-    in:         element (course to be compared against and added if not in list)
-    in:         runningList (running list of prereq courses found)
-    return:     runningList (updated accordingly)
-    */
-    public static ArrayList<String> addElementToListNoDup(String element, ArrayList<String> runningList)
-    {   
-        if (!runningList.contains(element))
-        {
-            runningList.add(element);
-        }
-
-        return runningList;
+        System.out.println(preparedStatement);
+        return getAllEntriesOfCriteria(attributeValues, preparedStatement, changeMask);
     }
 }

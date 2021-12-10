@@ -37,11 +37,25 @@ public class LoginFrame extends JFrame implements ActionListener
         addActionEvent();
     }
 
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    in:         
+    return:     
+    */
     public void setLayoutManager()
     {
         container.setLayout(null);
     }
 
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    in:         
+    return:     
+    */
     public void setLocationAndSize()
     {
         // Set location and size of each component
@@ -60,6 +74,13 @@ public class LoginFrame extends JFrame implements ActionListener
         clearButton.setBounds(475, 350, 100, 30);
     }
 
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    in:         
+    return:     
+    */
     public void setUniqueAttributes()
     {
         // Set title font and size
@@ -71,6 +92,13 @@ public class LoginFrame extends JFrame implements ActionListener
         loginType.add(ownerType);
     }
 
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    in:         
+    return:     
+    */
     public void addComponentsToContainer()
     {
         // Add components to view
@@ -89,6 +117,13 @@ public class LoginFrame extends JFrame implements ActionListener
         container.add(clearButton);
     }
 
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    in:         
+    return:     
+    */
     public void addActionEvent()
     {
         loginButton.addActionListener(this);
@@ -98,6 +133,13 @@ public class LoginFrame extends JFrame implements ActionListener
     }
 
     // Override action performed
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    in:         
+    return:     
+    */
     @Override
     public void actionPerformed(ActionEvent event)
     {
@@ -132,7 +174,7 @@ public class LoginFrame extends JFrame implements ActionListener
                         LookInnaBook.setUsername(userDetails.get(0));
                         LookInnaBook.setIsUser(isUserType);
 
-                        // UserView.showOwnerView();
+                        UserView.showUserView();
                         isValid = true;
                     }
                 }
@@ -185,7 +227,7 @@ public class LoginFrame extends JFrame implements ActionListener
                             LookInnaBook.setUsername(userDetails.get(0));
                             LookInnaBook.setIsUser(isUserType);
 
-                            // UserView.showOwnerView();
+                            UserView.showUserView();
                             isValid = true;
                         }
                     }

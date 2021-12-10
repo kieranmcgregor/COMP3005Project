@@ -1,3 +1,9 @@
+/*  
+ *  COMP3005 F21 Project
+ *  Kieran McGregor
+ *  101098640
+ */
+
 import java.sql.*;
 
 import java.util.*;
@@ -6,7 +12,13 @@ import java.math.*;
 public class DBDelete
 {
     static private final String BOOK_DELETE = "DELETE FROM books WHERE isbn=?";
-
+    
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    return:     
+    */
     protected static Integer deleteItem(String prepared_statement, String isbn)
     {
         try
@@ -31,6 +43,12 @@ public class DBDelete
         return -1;
     }
 
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    return:     
+    */
     public static Boolean deleteBook(String isbn)
     {
         System.out.println("Deleting book in DB...");
