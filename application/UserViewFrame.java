@@ -22,8 +22,7 @@ public class UserViewFrame extends JFrame implements ActionListener
 
     // Create CUD tab components
     JPanel searchPane = new JPanel();
-    JPanel resultsPane = new JPanel();
-    JScrollPane resultsScrollPane = new JScrollPane(resultsPane);
+    JScrollPane searchScrollPane = new JScrollPane(searchPane);
 
     // Create work tab labels
     // Create Book labels
@@ -120,7 +119,6 @@ public class UserViewFrame extends JFrame implements ActionListener
         container.setLayout(null);
 
         searchPane.setLayout(null);
-        resultsPane.setLayout(null);
     }
 
     public void setLocationAndSize()
@@ -128,8 +126,7 @@ public class UserViewFrame extends JFrame implements ActionListener
         // Set location and size of each component
         pageTitleLabel.setBounds(225, 25, 500, 60);
 
-        searchPane.setBounds(0, 100, 735, 440);
-        resultsPane.setBounds(0, 345, 735, 440);
+        searchScrollPane.setBounds(25, 100, 735, 440);
 
         // Position the work tab components
         // Position book labels
@@ -215,9 +212,8 @@ public class UserViewFrame extends JFrame implements ActionListener
         publisherCountryLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
         // Set addBook vertical scroll
-        searchPane.setPreferredSize(new Dimension(400, 200));
-        resultsScrollPane.setPreferredSize(new Dimension(400, 440));
-        resultsPane.setPreferredSize(new Dimension(400, 1130));
+        searchPane.setPreferredSize(new Dimension(400, 1100));
+        searchScrollPane.setPreferredSize(new Dimension(400, 440));
     }
 
     public void addComponentsToTopPane()
@@ -280,8 +276,8 @@ public class UserViewFrame extends JFrame implements ActionListener
         addComponentsToTopPane();
 
         // Add search and results pane to container
-        container.add(searchPane);
-        container.add(resultsScrollPane);
+        // container.add(searchPane);
+        container.add(searchScrollPane);
     }
 
     public void addActionEvent()
@@ -337,6 +333,52 @@ public class UserViewFrame extends JFrame implements ActionListener
         return fieldForConversion.getText().trim();
     }
 
+    protected void displayBooks(ArrayList<ArrayList<String>> listOfBooks)
+    {
+        int yPos = 410;
+
+        for (int i = 0; i < listOfBooks.size(); ++i)
+        {
+            System.out.println("Adding New Book...");
+
+            yPos = (410 + i*35);
+            String bookDetails = new String();
+            ArrayList<String> bookAttributes = listOfBooks.get(i);
+
+            // Build buttons for book selection
+            JButton button = new JButton(bookAttributes.get(0));
+            button.addActionListener(this);
+
+            // Build quantity fields
+            JFormattedTextField quantityField = new JFormattedTextField(amountFormat);
+            quantityField.setName(bookAttributes.get(0));
+
+            // Build other book details
+            for (int j = 1; j < bookAttributes.size(); ++j)
+            {
+                bookDetails += bookAttributes.get(j);
+
+                if (j < bookAttributes.size()-1)
+                {
+                    bookDetails += ", ";
+                }
+            }
+            JLabel roDetails = new JLabel(bookDetails + "THE END");
+
+            // Set component bounds
+            button.setBounds(10, yPos, 150, 30);
+            quantityField.setBounds(165, yPos, 50, 30);
+            roDetails.setBounds(220, yPos, 400, 30);
+
+            // Add components to search pane
+            searchPane.add(button);
+            searchPane.add(quantityField);
+            searchPane.add(roDetails);
+        }
+
+        // searchPane.setPreferredSize(new Dimension(400, yPos));
+    }
+
     // Override action performed
     @Override
     public void actionPerformed(ActionEvent event)
@@ -370,20 +412,33 @@ public class UserViewFrame extends JFrame implements ActionListener
            System.out.println("Searching books...");
            ArrayList<ArrayList<String>> listOfBooks = DBQuery.getAllBooksOfCriteria(bookDetails);
 
-           for (ArrayList<String> book : listOfBooks)
-           {
-               System.out.println("NEW BOOK\n");
-               for (String attribute : book)
-               {
-                   System.out.println(attribute);
-               }
-           }
+           displayBooks(listOfBooks);
         }
-
         // Handle clear button event
-        if (event.getSource() == clearButton)
+        else if (event.getSource() == clearButton)
         {
             clearBook();
+        }
+        else
+        {
+            String selectedISBN = event.getActionCommand();
+            String quantity = "0"; 
+
+            for(Component component : searchPane.getComponents())
+            {
+                //System.out.println("Component:" + component);
+                if (component instanceof JFormattedTextField
+                    && component.getName() != null
+                    && component.getName().equals(selectedISBN))
+                { 
+                    quantity = ((JFormattedTextField)component).getText().trim();
+                }
+            }
+
+            ArrayList<String> selectedBook = new ArrayList<>(Arrays.asList(LookInnaBook.getUsername()
+                                                                            , selectedISBN
+                                                                            , quantity));
+            DBUpdate.addToBasket(selectedBook);
         }
     }
 }

@@ -21,6 +21,7 @@ public class DBCreate
     static private final String BANK_ACCOUNT_CREATE = "INSERT INTO bank_account(institution_number, transit_number, account_number, balance, id) VALUES(?,?,?,0.00,?)";
     static private final String OWNER_CREATE = "INSERT INTO owner(username, password) VALUES(?,?)";
     static private final String USER_CREATE = "INSERT INTO users(username, password) VALUES(?,?)";
+    static private final String SELECTS_CREATE = "INSERT INTO selects(username, isbn, quantity) VALUES(?,?,?)";
 
     /*
     Function:   
@@ -504,5 +505,17 @@ public class DBCreate
     {
         System.out.println("Adding user...");
         return addItem(userDetails, USER_CREATE, new int[]{0,0});
+    }
+
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    return:     
+    */
+    protected static Boolean selectBook(ArrayList<String> selectionDetails)
+    {
+        System.out.println("Adding book to basket...");
+        return addItem(selectionDetails, SELECTS_CREATE, new int[]{0,0,1});
     }
 }

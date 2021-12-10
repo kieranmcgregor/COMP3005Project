@@ -14,6 +14,7 @@ public class DBUpdate
     static private final String AUTHOR_UPDATE = "UPDATE author SET";
     static private final String BOOK_QUANTITY_UPDATE = "UPDATE books SET quantity = quantity + ? WHERE isbn = ?";
     static private final String SELL_BOOKS_UPDATE = "UPDATE books SET quantity = quantity - ? WHERE isbn = ?";
+    static private final String SELECTS_UPDATE = "UPDATE selects SET quantity = quantity + ? WHERE username=? AND isbn = ?";
 
     /*
     Function:   
@@ -39,7 +40,7 @@ public class DBUpdate
                 }
                 else if (stringIntFlag[i] == 1)
                 {
-                    prepStmt.setLong(i+1, Long.parseUnsignedLong(entityDetails.get(i)));
+                    prepStmt.setLong(i+1, Long.parseLong(entityDetails.get(i)));
                 }
                 else
                 {
@@ -170,6 +171,42 @@ public class DBUpdate
         if (DBQuery.bookExists(bookDetails))
         {
             buyBooks(bookDetails);
+        }
+    }
+
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    return:     
+    */
+    public static void updateQuantityOfSelectedBooks(ArrayList<String> selectionDetails)
+    {
+        System.out.println("Adding books to basket...");
+        ArrayList<String> booksToAddToBasket = new ArrayList<>(Arrays.asList(selectionDetails.get(2)
+                                                                , selectionDetails.get(0)
+                                                                , selectionDetails.get(1)));
+        String preparedStatement = SELECTS_UPDATE;
+        updateItem(booksToAddToBasket, preparedStatement, new int[]{1,0,0});
+    }
+
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    return:     
+    */
+    public static void addToBasket(ArrayList<String> selectionDetails)
+    {
+        if (!DBQuery.selectionExists(selectionDetails))
+        {
+            System.out.println("Adding book to basket...");
+            DBCreate.selectBook(selectionDetails);
+        }
+        else
+        {
+            System.out.println("Adding more books to basket...");
+            updateQuantityOfSelectedBooks(selectionDetails);
         }
     }
 }

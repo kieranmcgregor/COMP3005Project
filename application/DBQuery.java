@@ -11,8 +11,7 @@ import java.math.*;
 public class DBQuery
 {
     static public final String SUPER_BOOK_QUERY = "SELECT books.isbn,title,genre,page_count,price,first_name"+
-                                                            ",middle_name,last_name,name,email,phone_number,number"+
-                                                            ",street,city,province,postal_code,country"+
+                                                            ",middle_name,last_name,name"+
                                                         " FROM (books INNER JOIN (publisher NATURAL JOIN provincial_area)"+
                                                                 " ON books.publisher_id = publisher.id)"+
                                                             " INNER JOIN (authors NATURAL JOIN author)"+
@@ -27,6 +26,7 @@ public class DBQuery
     static public final String BANK_ACCOUNT_QUERY = "SELECT * FROM bank_account";
     static public final String OWNER_QUERY = "SELECT * FROM owner";
     static public final String USER_QUERY = "SELECT * FROM users";
+    static public final String SELECTS_QUERY = "SELECT * FROM selects";
 
     /*
     Function:   
@@ -157,8 +157,9 @@ public class DBQuery
                 ResultSetMetaData meta = rs.getMetaData();
                 int colCount = meta.getColumnCount();
 
-                for (int i = 1; i < colCount; ++i)
+                for (int i = 1; i <= colCount; ++i)
                 {
+                    System.out.println(rs.getString(i));
                     tupleValue.add(rs.getString(i));
                 }
 
@@ -432,6 +433,20 @@ public class DBQuery
         System.out.println("Checking user...");
         String prepared_user_query = USER_QUERY + " WHERE username=?";
         return checkIfExists(userDetails, prepared_user_query, new int[]{0});
+    }
+
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    in:         
+    return:     
+    */
+    public static Boolean selectionExists(ArrayList<String> selectionDetails)
+    {
+        System.out.println("Checking user selected book...");
+        String prepared_selects_query = SELECTS_QUERY + " WHERE username=? AND isbn=?";
+        return checkIfExists(selectionDetails, prepared_selects_query, new int[]{0,0});
     }
 
     /*
