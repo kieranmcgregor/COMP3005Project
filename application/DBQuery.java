@@ -5,10 +5,6 @@ import java.math.*;
 
 public class DBQuery
 {
-    static private final String DB_URL = "jdbc:postgresql://localhost:5433/lookinnabook";
-    static private final String USER = "postgres";
-    static private final String PW = "S##+d57750!9";
-
     static public final String BOOK_QUERY = "SELECT * FROM books";
     static public final String AUTHORS_QUERY = "SELECT * FROM authors";
     static public final String ADDS_QUERY = "SELECT * FROM adds";
@@ -31,7 +27,7 @@ public class DBQuery
     {
         try
         {
-            Connection conn = DriverManager.getConnection(DB_URL, USER, PW);
+            Connection conn = DriverManager.getConnection(LookInnaBook.DB_URL, LookInnaBook.USER, LookInnaBook.PW);
             Statement stmt = conn.createStatement ( ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY );
             ResultSet rs = stmt.executeQuery (query);
 
@@ -65,7 +61,7 @@ public class DBQuery
 
         try
         {
-            Connection conn = DriverManager.getConnection(DB_URL, USER, PW);
+            Connection conn = DriverManager.getConnection(LookInnaBook.DB_URL, LookInnaBook.USER, LookInnaBook.PW);
             PreparedStatement prepStmt = conn.prepareStatement(prepared_query);
 
             for (int i = 0; i < stringIntFlag.length; ++i)
@@ -122,7 +118,7 @@ public class DBQuery
     {
         try
         {
-            Connection conn = DriverManager.getConnection(DB_URL, USER, PW);
+            Connection conn = DriverManager.getConnection(LookInnaBook.DB_URL, LookInnaBook.USER, LookInnaBook.PW);
             PreparedStatement prepStmt = conn.prepareStatement(prepared_statement);
 
             for (int i = 0; i < stringIntFlag.length; ++i)
@@ -392,7 +388,7 @@ public class DBQuery
 
         try
         {
-            Connection conn = DriverManager.getConnection(DB_URL, USER, PW);
+            Connection conn = DriverManager.getConnection(LookInnaBook.DB_URL, LookInnaBook.USER, LookInnaBook.PW);
             PreparedStatement prepStmt = conn.prepareStatement(prepared_query);
             ResultSet rs = prepStmt.executeQuery();
 

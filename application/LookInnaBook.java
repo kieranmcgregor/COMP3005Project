@@ -6,6 +6,10 @@
 
 public class LookInnaBook
 {
+    static public final String DB_URL = "jdbc:postgresql://localhost:5433/lookinnabook";
+    static public final String USER = "postgres";
+    static public final String PW = "S##+d57750!9";
+    
     private static String username = new String();
     private static Boolean isUser = true;
 

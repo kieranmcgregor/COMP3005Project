@@ -11,10 +11,6 @@ import java.math.*;
 
 public class DBCreate
 {
-    static private final String DB_URL = "jdbc:postgresql://localhost:5433/lookinnabook";
-    static private final String USER = "postgres";
-    static private final String PW = "S##+d57750!9";
-
     static private final String BOOK_CREATE = "INSERT INTO books(isbn, title, genre, page_count, price, publisher_percentage, quantity, threshold, publisher_id, warehouse_id) VALUES(?,?,?,?,?,?,?,?,?,1)";
     static private final String AUTHORS_CREATE = "INSERT INTO authors(id, isbn) VALUES(?,?)";
     static private final String ADDS_CREATE = "INSERT INTO adds(username, isbn) VALUES(?,?)";
@@ -52,7 +48,7 @@ public class DBCreate
     {
         try
         {
-            Connection conn = DriverManager.getConnection(DB_URL, USER, PW);
+            Connection conn = DriverManager.getConnection(LookInnaBook.DB_URL, LookInnaBook.USER, LookInnaBook.PW);
             PreparedStatement prepStmt = conn.prepareStatement(prepared_statement);
 
             for (int i = 0; i < stringIntFlag.length; ++i)

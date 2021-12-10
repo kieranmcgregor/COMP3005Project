@@ -11,10 +11,6 @@ import java.math.*;
 
 public class DBUpdate
 {
-    static private final String DB_URL = "jdbc:postgresql://localhost:5433/lookinnabook";
-    static private final String USER = "postgres";
-    static private final String PW = "S##+d57750!9";
-
     static private final String AUTHOR_UPDATE = "UPDATE author SET";
 
     protected static Boolean updateItem(ArrayList<String> entityDetails
@@ -23,7 +19,7 @@ public class DBUpdate
     {
         try
         {
-            Connection conn = DriverManager.getConnection(DB_URL, USER, PW);
+            Connection conn = DriverManager.getConnection(LookInnaBook.DB_URL, LookInnaBook.USER, LookInnaBook.PW);
             PreparedStatement prepStmt = conn.prepareStatement(prepared_statement);
 
             for (int i = 0; i < entityDetails.size(); ++i)
