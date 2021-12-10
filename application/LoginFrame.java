@@ -4,6 +4,8 @@
  *  101098640
  */
 
+import java.util.ArrayList;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -99,6 +101,11 @@ public class LoginFrame extends JFrame implements ActionListener
     @Override
     public void actionPerformed(ActionEvent event)
     {
+        ArrayList<String> userDetails = new ArrayList<String>();
+
+        userDetails.add(userTextField.getText().trim());
+        userDetails.add(passwordField.getText().trim());
+
         // Handle login button event
         if (event.getSource() == loginButton)
         {
@@ -119,13 +126,28 @@ public class LoginFrame extends JFrame implements ActionListener
                 if (isUserType)
                 {
                     // Check if user exists and password is correct
-                    isValid = true;
+                    if (DBQuery.userExists(userDetails)
+                        && DBQuery.userPasswordIsValid(userDetails))
+                    {
+                        LookInnaBook.setUsername(userDetails.get(0));
+                        LookInnaBook.setIsUser(isUserType);
+
+                        // UserView.showOwnerView();
+                        isValid = true;
+                    }
                 }
                 else
                 {
                     // Check if owner exists and password is correct
-                    OwnerView.showOwnerView();
-                    isValid = true;
+                    if (DBQuery.ownerExists(userDetails)
+                        && DBQuery.ownerPasswordIsValid(userDetails))
+                    {
+                        LookInnaBook.setUsername(userDetails.get(0));
+                        LookInnaBook.setIsUser(isUserType);
+
+                        OwnerView.showOwnerView();
+                        isValid = true;
+                    }
                 }
 
                 if (isValid)
@@ -156,13 +178,32 @@ public class LoginFrame extends JFrame implements ActionListener
                 if (isUserType)
                 {
                     // Check if user exists otherwise add user with password
-                    isValid = true;
+                    if (!DBQuery.userExists(userDetails))
+                    {
+                        if (DBCreate.addUser(userDetails))
+                        {
+                            LookInnaBook.setUsername(userDetails.get(0));
+                            LookInnaBook.setIsUser(isUserType);
+
+                            // UserView.showOwnerView();
+                            isValid = true;
+                        }
+                    }
                 }
                 else
                 {
                     // Check if owner exists otherwise add user with password
-                    OwnerView.showOwnerView();
-                    isValid = true;
+                    if (!DBQuery.ownerExists(userDetails))
+                    {
+                        if (DBCreate.addOwner(userDetails))
+                        {
+                            LookInnaBook.setUsername(userDetails.get(0));
+                            LookInnaBook.setIsUser(isUserType);
+
+                            OwnerView.showOwnerView();
+                            isValid = true;
+                        }
+                    }
                 }
 
                 if (isValid)

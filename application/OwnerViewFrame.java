@@ -5,7 +5,7 @@
  */
 
 import java.text.*;
-import java.util.Locale;
+import java.util.*;
 
 import javax.swing.*;
 import javax.swing.text.MaskFormatter;
@@ -13,8 +13,6 @@ import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import java.util.ArrayList;
 
 public class OwnerViewFrame extends JFrame implements ActionListener
 {
@@ -137,6 +135,9 @@ public class OwnerViewFrame extends JFrame implements ActionListener
     // Constructor
     OwnerViewFrame()
     {
+        System.out.println(LookInnaBook.getUsername());
+        System.out.println(LookInnaBook.isUser());
+
         setLayoutManager();
         setLocationAndSize();
         setUniqueAttributes();
@@ -553,18 +554,18 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         // Handle add author button event
         if (event.getSource() == addAuthorButton)
         {
-            Integer authorId = DBAddBook.checkAndAddAuthor(authorDetails);
+            Integer authorId = DBCreate.checkAndAddAuthor(authorDetails);
 
             if (authorId > 0)
             {
-                authorIDsTextField.setText(authorId.toString());
+                authorIDsTextField.setValue(authorId);
             }
         }
 
         // Handle edit author button event
         if (event.getSource() == editAuthorButton)
         {
-            DBAddBook.checkAndEditAuthor(authorDetails);
+            DBUpdate.checkAndEditAuthor(authorDetails);
         }
 
         // Handle clear author button event
@@ -576,8 +577,8 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         // Handle add address button event
         if (event.getSource() == addAddressButton)
         {
-            if (DBAddBook.checkAndAddProvinceDetails(provinceDetails)
-                && DBAddBook.checkAndAddStreetDetails(streetDetails))
+            if (DBCreate.checkAndAddProvinceDetails(provinceDetails)
+                && DBCreate.checkAndAddStreetDetails(streetDetails))
             {
                 System.out.println("Address added!");
             }
@@ -590,8 +591,8 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         // Handle edit address button event
         if (event.getSource() == editAddressButton)
         {
-            if (DBAddBook.checkAndEditProvinceDetails(provinceDetails)
-                && DBAddBook.checkAndEditStreetDetails(streetDetails))
+            if (DBCreate.checkAndEditProvinceDetails(provinceDetails)
+                && DBCreate.checkAndEditStreetDetails(streetDetails))
             {
                 System.out.println("Address edited!");
             }
@@ -610,18 +611,18 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         // Handle add publisher button event
         if (event.getSource() == addPublisherButton)
         {
-            Integer publisherId = DBAddBook.checkAndAddPublisher(publisherDetails, streetDetails);
+            Integer publisherId = DBCreate.checkAndAddPublisher(publisherDetails, streetDetails);
 
             if (publisherId > 0)
             {
-                publisherIDTextField.setText(publisherId.toString());
+                publisherIDTextField.setValue(publisherId);
             }
         }
 
         // Handle edit publisher button event
         if (event.getSource() == editPublisherButton)
         {
-            DBAddBook.checkAndEditPublisher(publisherDetails);
+            DBCreate.checkAndEditPublisher(publisherDetails);
         }
 
         // Handle clear publisher button event
@@ -633,13 +634,13 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         // Handle add bank account button event
         if (event.getSource() == addBankAccountButton)
         {
-            DBAddBook.checkAndAddBankAccount(bankAccountDetails);
+            DBCreate.checkAndAddBankAccount(bankAccountDetails);
         }
 
         // Handle edit bank account button event
         if (event.getSource() == editBankAccountButton)
         {
-            DBAddBook.checkAndEditBankAccount(bankAccountDetails);
+            DBCreate.checkAndEditBankAccount(bankAccountDetails);
         }
 
         // Handle clear bank account button event
@@ -651,7 +652,7 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         // Handle add button event
         if (event.getSource() == addBookButton)
         {
-            DBAddBook.checkAndAddAllBookDetails(provinceDetails
+            DBCreate.checkAndAddAllBookDetails(provinceDetails
                                                 , streetDetails
                                                 , publisherDetails
                                                 , bankAccountDetails
@@ -669,7 +670,7 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         if (event.getSource() == deleteBookButton)
         {
             System.out.println("Deleting book...");
-            DBAddBook.deleteBook(bookDetails.get(0));
+            DBDelete.deleteBook(bookDetails.get(0));
         }
 
         // Handle clear button event

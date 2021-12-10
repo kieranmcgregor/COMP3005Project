@@ -161,6 +161,7 @@ CREATE TABLE selects (
 CREATE TABLE orders (
     order_number INTEGER REFERENCES "order"(order_number) ON DELETE CASCADE NOT NULL,
     ISBN VARCHAR(17) REFERENCES books(ISBN) ON DELETE CASCADE NOT NULL,
+    quantity INTEGER NOT NULL,
     PRIMARY KEY(order_number, ISBN)
 );
 
@@ -174,3 +175,24 @@ INSERT INTO warehouse(number, street, postal_code, country)
     VALUES (5225, 'Boundary Rd.', 'K4B1P6', 'Canada');
 
 INSERT INTO shipping_service(name) VALUES ('Canada Post');
+
+CREATE OR REPLACE FUNCTION order_more_books()
+    RETURNS TRIGGER
+    LANGUAGE PLPGSQL
+    AS
+$$
+    BEGIN
+        IF NEW.quantity < NEW.threshold THEN
+        UPDATE books SET quantity = quantity +
+            (SELECT COUNT(*) FROM "order" NATURAL JOIN orders WHERE order_date < NOW() - INTERVAL '30 days' AND books.ISBN == orders.ISBN);
+        END IF;
+
+        RETURN NEW;
+    END;
+$$;
+
+CREATE TRIGGER check_books_levels
+    AFTER UPDATE
+    ON books
+    FOR EACH STATEMENT
+    EXECUTE PROCEDURE order_more_books();
