@@ -71,7 +71,11 @@ CREATE TABLE IF NOT EXISTS author (
 
 CREATE TABLE IF NOT EXISTS shipping_service (
     ID SERIAL PRIMARY KEY,
-    name VARCHAR(255)
+    name VARCHAR(255),
+    number VARCHAR(20),
+    street VARCHAR(255),
+    postal_code VARCHAR(6),
+    country VARCHAR(255),
 );
 
 CREATE TABLE IF NOT EXISTS warehouse (
@@ -98,7 +102,7 @@ CREATE TABLE books (
     warehouse_id INTEGER REFERENCES warehouse(ID) ON DELETE RESTRICT NOT NULL
 );
 
-CREATE TABLE "order" (
+CREATE TABLE book_order (
     order_number SERIAL PRIMARY KEY,
     shipping_state VARCHAR(255),
     order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -108,7 +112,7 @@ CREATE TABLE "order" (
 );
 
 CREATE TABLE order_addresses (
-    order_number INTEGER REFERENCES "order"(order_number) ON DELETE CASCADE NOT NULL,
+    order_number INTEGER REFERENCES book_order(order_number) ON DELETE CASCADE NOT NULL,
     shipping_number VARCHAR(20) NOT NULL,
     shipping_street VARCHAR(255) NOT NULL,
     shipping_postal_code VARCHAR(6) NOT NULL,
@@ -159,7 +163,7 @@ CREATE TABLE selects (
 );
 
 CREATE TABLE orders (
-    order_number INTEGER REFERENCES "order"(order_number) ON DELETE CASCADE NOT NULL,
+    order_number INTEGER REFERENCES book_order(order_number) ON DELETE CASCADE NOT NULL,
     ISBN VARCHAR(17) REFERENCES books(ISBN) ON DELETE CASCADE NOT NULL,
     quantity INTEGER NOT NULL,
     PRIMARY KEY(order_number, ISBN)
@@ -169,12 +173,18 @@ INSERT INTO provincial_area(postal_code, city, province)
     VALUES ('K4B1P6', 'Ottawa', 'Ontario');
 
 INSERT INTO street_area(number, street, postal_code, country)
-    VALUES (5225, 'Boundary Rd.', 'K4B1P6', 'Canada');
+    VALUES ('5225', 'Boundary Rd.', 'K4B1P6', 'Canada');
 
 INSERT INTO warehouse(number, street, postal_code, country)
-    VALUES (5225, 'Boundary Rd.', 'K4B1P6', 'Canada');
+    VALUES ('5225', 'Boundary Rd.', 'K4B1P6', 'Canada');
 
-INSERT INTO shipping_service(name) VALUES ('Canada Post');
+INSERT INTO provincial_area(postal_code, city, province)
+    VALUES ('K1G3H3', 'Ottawa', 'Ontario');
+
+INSERT INTO street_area(number, street, postal_code, country)
+    VALUES ('10', 'Sandford Fleming Ave.', 'K1G3H3', 'Canada');
+
+INSERT INTO shipping_service(name, number, street, postal_code, country) VALUES ('Canada Post', '10', 'Sandford Fleming Ave.', 'K1G3H3', 'Canada');
 
 CREATE OR REPLACE FUNCTION order_more_books()
     RETURNS TRIGGER
@@ -184,7 +194,7 @@ $$
     BEGIN
         IF NEW.quantity < NEW.threshold THEN
         UPDATE books SET quantity = quantity +
-            (SELECT COUNT(*) FROM "order" NATURAL JOIN orders WHERE order_date < NOW() - INTERVAL '30 days' AND books.ISBN == orders.ISBN);
+            (SELECT COUNT(*) FROM book_order NATURAL JOIN orders WHERE order_date < NOW() - INTERVAL '30 days' AND books.ISBN == orders.ISBN);
         END IF;
 
         RETURN NEW;

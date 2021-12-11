@@ -12,6 +12,7 @@ import java.math.*;
 public class DBDelete
 {
     static private final String BOOK_DELETE = "DELETE FROM books WHERE isbn=?";
+    static private final String SELECTS_DELETE = "DELETE FROM selects WHERE username=? AND isbn=?";
     
     /*
     Function:   
@@ -19,13 +20,32 @@ public class DBDelete
     in:         
     return:     
     */
-    protected static Integer deleteItem(String prepared_statement, String isbn)
+    protected static Integer deleteItem(String prepared_statement
+                                        , ArrayList<String> entityDetails
+                                        , int[] stringIntFlag)
     {
         try
         {
             Connection conn = DriverManager.getConnection(LookInnaBook.DB_URL, LookInnaBook.USER, LookInnaBook.PW);
             PreparedStatement prepStmt = conn.prepareStatement(prepared_statement);
-            prepStmt.setString(1, isbn);
+            
+            for (int i = 0; i < stringIntFlag.length; ++i)
+            {
+                System.out.println(entityDetails.get(i));
+                if (stringIntFlag[i] == 0)
+                {
+                    prepStmt.setString(i+1, entityDetails.get(i));
+                }
+                else if (stringIntFlag[i] == 1)
+                {
+                    prepStmt.setLong(i+1, Long.parseUnsignedLong(entityDetails.get(i)));
+                }
+                else
+                {
+                    prepStmt.setBigDecimal(i+1, new BigDecimal(entityDetails.get(i)));
+                }
+            }
+            
             int row = prepStmt.executeUpdate();
 
             Class.forName("org.postgresql.Driver");
@@ -51,8 +71,20 @@ public class DBDelete
     */
     public static Boolean deleteBook(String isbn)
     {
-        System.out.println("Deleting book in DB...");
-        return deleteItem(BOOK_DELETE, isbn) >= 0;
+        System.out.println("Deleting book from DB...");
+        return deleteItem(BOOK_DELETE, new ArrayList<>(Arrays.asList(isbn)), new int[]{0}) >= 0;
+    }
+
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    return:     
+    */
+    public static Boolean deleteBookFromSelects(ArrayList<String> selectsBookDetails)
+    {
+        System.out.println("Deleting book from basket...");
+        return deleteItem(SELECTS_DELETE,  selectsBookDetails, new int[]{0,0}) >= 0;
     }
 
 }

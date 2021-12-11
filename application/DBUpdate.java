@@ -14,7 +14,9 @@ public class DBUpdate
     static private final String AUTHOR_UPDATE = "UPDATE author SET";
     static private final String BOOK_QUANTITY_UPDATE = "UPDATE books SET quantity = quantity + ? WHERE isbn = ?";
     static private final String SELL_BOOKS_UPDATE = "UPDATE books SET quantity = quantity - ? WHERE isbn = ?";
-    static private final String SELECTS_UPDATE = "UPDATE selects SET quantity = quantity + ? WHERE username=? AND isbn = ?";
+    static private final String SELECTS_ADD_BOOKS_UPDATE = "UPDATE selects SET quantity = quantity + ? WHERE username=? AND isbn = ?";
+    static private final String SELECTS_UPDATE = "UPDATE selects SET quantity=? WHERE username=? AND isbn =?";
+    static private final String BANK_BALANCE_UPDATE = "UPDATE bank_account SET balance = balance + ? WHERE id=?";
 
     /*
     Function:   
@@ -154,10 +156,9 @@ public class DBUpdate
     */
     public static void sellBooks(ArrayList<String> bookDetails)
     {
-        System.out.println("Buying books...");
-        ArrayList<String> booksToOrder = new ArrayList<>(Arrays.asList(bookDetails.get(6), bookDetails.get(0)));
+        System.out.println("Selling books...");
         String preparedStatement = SELL_BOOKS_UPDATE;
-        updateItem(booksToOrder, preparedStatement, new int[]{1,0});
+        updateItem(bookDetails, preparedStatement, new int[]{1,0});
     }
 
     /*
@@ -170,7 +171,7 @@ public class DBUpdate
     {
         if (DBQuery.bookExists(bookDetails))
         {
-            buyBooks(bookDetails);
+            sellBooks(bookDetails);
         }
     }
 
@@ -180,13 +181,28 @@ public class DBUpdate
     in:         
     return:     
     */
-    public static void updateQuantityOfSelectedBooks(ArrayList<String> selectionDetails)
+    public static void payPublisher(Double paymentAmount, String publisherID)
+    {
+        System.out.println("Paying publisher...");
+        String preparedStatement = BANK_BALANCE_UPDATE;
+        updateItem(new ArrayList<>(Arrays.asList(paymentAmount.toString(), publisherID))
+                    , preparedStatement
+                    , new int[]{2,1});
+    }
+
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    return:     
+    */
+    public static void increaseSelectedBooksQuantity(ArrayList<String> selectionDetails)
     {
         System.out.println("Adding books to basket...");
-        ArrayList<String> booksToAddToBasket = new ArrayList<>(Arrays.asList(selectionDetails.get(2)
-                                                                , selectionDetails.get(0)
-                                                                , selectionDetails.get(1)));
-        String preparedStatement = SELECTS_UPDATE;
+        ArrayList<String> booksToAddToBasket = new ArrayList<>(Arrays.asList(selectionDetails.get(0)
+                                                                , selectionDetails.get(1)
+                                                                , selectionDetails.get(2)));
+        String preparedStatement = SELECTS_ADD_BOOKS_UPDATE;
         updateItem(booksToAddToBasket, preparedStatement, new int[]{1,0,0});
     }
 
@@ -196,17 +212,34 @@ public class DBUpdate
     in:         
     return:     
     */
-    public static void addToBasket(ArrayList<String> selectionDetails)
+    public static void increaseBooksInBasket(ArrayList<String> selectionDetails)
     {
         if (!DBQuery.selectionExists(selectionDetails))
         {
             System.out.println("Adding book to basket...");
-            DBCreate.selectBook(selectionDetails);
+            DBCreate.addBooksToBasket(selectionDetails);
         }
         else
         {
             System.out.println("Adding more books to basket...");
-            updateQuantityOfSelectedBooks(selectionDetails);
+            increaseSelectedBooksQuantity(selectionDetails);
         }
+    }
+
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    return:     
+    */
+    public static void updateSelectedBookQuantity(ArrayList<String> selectionDetails)
+    {
+        System.out.println("Updating books in basket...");
+        ArrayList<String> booksInBasket = new ArrayList<>(Arrays.asList(selectionDetails.get(0)
+                                                                , selectionDetails.get(1)
+                                                                , selectionDetails.get(2)));
+        String preparedStatement = SELECTS_UPDATE;
+        System.out.println(preparedStatement);
+        updateItem(booksInBasket, preparedStatement, new int[]{1,0,0});
     }
 }

@@ -17,6 +17,8 @@ public class DBQuery
                                                             " INNER JOIN (authors NATURAL JOIN author)"+
                                                                 " ON books.isbn = authors.isbn";
     static public final String BOOK_QUERY = "SELECT * FROM books";
+    static public final String BOOK_PUBLISHER_QUERY = "SELECT publisher_id FROM books";
+    static public final String BOOK_PRICE_PERCENTAGE_QUERY = "SELECT price,publisher_percentage FROM books";
     static public final String AUTHORS_QUERY = "SELECT * FROM authors";
     static public final String ADDS_QUERY = "SELECT * FROM adds";
     static public final String AUTHOR_QUERY = "SELECT * FROM author";
@@ -35,6 +37,16 @@ public class DBQuery
                                                                 " ON books.isbn = authors.isbn"+
                                                         " WHERE selects.username=?";
     static public final String SELECTS_QUERY = "SELECT * FROM selects";
+    static public final String BOOK_ORDER_QUERY = "SELECT * FROM book_order";
+    static public final String WAREHOUSE_ADDRESS_QUERY = "SELECT number,street,postal_code,country FROM warehouse";
+    static public final String SHIPPING_SERVICE_ADDRESS_QUERY = "SELECT number,street,postal_code,country FROM shipping_service";
+    static public final String CURRENT_ORDER_ADDRESS_QUERY = "SELECT order_number,shipping_state,current_number,current_street"+
+                                                        ",provincial_area.city,provincial_area.province"+
+                                                        ",current_postal_code,current_country"+
+                                                            " FROM ((book_order NATURAL JOIN orders)"+
+                                                                    " NATURAL JOIN order_addresses)"+
+                                                                        " INNER_JOIN provincial_area"+
+                                                                            "ON provincial_area.postal_code = current_postal_code";
 
     /*
     Function:   
@@ -56,6 +68,38 @@ public class DBQuery
             rs.last();
 
             return rs.getInt("ID");
+        }
+        catch (ClassNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    in:         
+    return:     
+    */
+    protected static Integer getLastEntryOrderNumber(String query)
+    {
+        try
+        {
+            Connection conn = DriverManager.getConnection(LookInnaBook.DB_URL, LookInnaBook.USER, LookInnaBook.PW);
+            Statement stmt = conn.createStatement ( ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY );
+            ResultSet rs = stmt.executeQuery (query);
+
+            Class.forName("org.postgresql.Driver");
+
+            rs.last();
+
+            return rs.getInt("order_number");
         }
         catch (ClassNotFoundException e)
         {
@@ -486,6 +530,18 @@ public class DBQuery
     }
 
     /*
+    Function:   getAllSelectedUsernameBooks
+    Purpose:    query the DB for all books given a certain search criteria
+    in:         runningList (running list of books found)
+    return:     runningList (with any newly found books added)
+    */
+    public static ArrayList<ArrayList<String>> getAllSelectedUsernameBooks(ArrayList<String> selectionDetails)
+    {
+        String prepared_selects_query = SELECTS_QUERY + " WHERE username=?";
+        return getAllEntriesOfCriteria(selectionDetails, prepared_selects_query, new int[]{0});
+    }
+
+    /*
     Function:   getAllBooksOfCriteria
     Purpose:    query the DB for all books given a certain search criteria
     in:         runningList (running list of books found)
@@ -538,5 +594,76 @@ public class DBQuery
 
         System.out.println(preparedStatement);
         return getAllEntriesOfCriteria(attributeValues, preparedStatement, changeMask);
+    }
+
+    /*
+    Function:   getOrder
+    Purpose:    query the DB for order state
+    in:         runningList (running list of books found)
+    return:     runningList (with any newly found books added)
+    */
+    public static ArrayList<String> getOrder(Integer orderNumber)
+    {
+        System.out.println("Getting order " + orderNumber + "...");
+        String prepared_selects_query = BOOK_ORDER_QUERY + " WHERE order_number=?";
+        return getAllEntriesOfCriteria(new ArrayList<>(Arrays.asList(orderNumber.toString()))
+                                        , prepared_selects_query
+                                        , new int[]{1}).get(0);
+    }
+
+    /*
+    Function:   getWarehouseStreetAddress
+    Purpose:    query the DB for warehouse street address
+    in:         runningList (running list of books found)
+    return:     runningList (with any newly found books added)
+    */
+    public static ArrayList<String> getWarehouseStreetAddress(String warehouseID)
+    {
+        String prepared_selects_query = WAREHOUSE_ADDRESS_QUERY + " WHERE id=?";
+        return getAllEntriesOfCriteria(new ArrayList<>(Arrays.asList(warehouseID))
+                                        , prepared_selects_query
+                                        , new int[]{1}).get(0);
+    }
+
+    /*
+    Function:   getShippingServiceStreetAddress
+    Purpose:    query the DB for shipping service street address
+    in:         runningList (running list of books found)
+    return:     runningList (with any newly found books added)
+    */
+    public static ArrayList<String> getShippingServiceStreetAddress(String shippingServiceID)
+    {
+        String prepared_selects_query = SHIPPING_SERVICE_ADDRESS_QUERY + " WHERE id=?";
+        return getAllEntriesOfCriteria(new ArrayList<>(Arrays.asList(shippingServiceID))
+                                        , prepared_selects_query
+                                        , new int[]{1}).get(0);
+    }
+
+    /*
+    Function:   getBookPriceAndPercentage
+    Purpose:    query the DB for shipping service street address
+    in:         runningList (running list of books found)
+    return:     runningList (with any newly found books added)
+    */
+    public static ArrayList<String> getBookPriceAndPercentage(String isbn)
+    {
+        String prepared_selects_query = BOOK_PRICE_PERCENTAGE_QUERY + " WHERE isbn=?";
+        return getAllEntriesOfCriteria(new ArrayList<>(Arrays.asList(isbn))
+                                        , prepared_selects_query
+                                        , new int[]{0}).get(0);
+    }
+
+    /*
+    Function:   getBookPublisher
+    Purpose:    query the DB for shipping service street address
+    in:         runningList (running list of books found)
+    return:     runningList (with any newly found books added)
+    */
+    public static ArrayList<String> getBookPublisher(String isbn)
+    {
+        String prepared_selects_query = BOOK_PUBLISHER_QUERY + " WHERE isbn=?";
+        return getAllEntriesOfCriteria(new ArrayList<>(Arrays.asList(isbn))
+                                        , prepared_selects_query
+                                        , new int[]{0}).get(0);
     }
 }

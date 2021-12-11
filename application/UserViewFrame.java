@@ -141,7 +141,7 @@ public class UserViewFrame extends JFrame implements ActionListener
         addComponentsToContainer();
         addActionEvent();
 
-        displaySelectedBooks(DBQuery.getAllSelectedBooksOfCriteria(new ArrayList<>(Arrays.asList(LookInnaBook.getUsername()))));
+        displaySelectedBooks();
     }
 
     /*
@@ -674,8 +674,9 @@ public class UserViewFrame extends JFrame implements ActionListener
     in:         
     return:     
     */
-    protected void displaySelectedBooks(ArrayList<ArrayList<String>> listOfBooks)
+    protected void displaySelectedBooks()
     {
+        ArrayList<ArrayList<String>> listOfBooks = DBQuery.getAllSelectedBooksOfCriteria(new ArrayList<>(Arrays.asList(LookInnaBook.getUsername())));
         int yPos = 410;
 
         // Remove previous search results
@@ -743,10 +744,10 @@ public class UserViewFrame extends JFrame implements ActionListener
             orderPane.add(roDetails);
 
             // Add components to array list
-            bookResults.add(deleteButton);
-            bookResults.add(editButton);
-            bookResults.add(quantityField);
-            bookResults.add(roDetails);
+            selectedResults.add(deleteButton);
+            selectedResults.add(editButton);
+            selectedResults.add(quantityField);
+            selectedResults.add(roDetails);
         }
 
         orderPane.setPreferredSize(new Dimension(400, yPos + 55));
@@ -764,6 +765,10 @@ public class UserViewFrame extends JFrame implements ActionListener
     public void actionPerformed(ActionEvent event)
     {
         ArrayList<String> bookDetails = new ArrayList<String>();
+        ArrayList<String> shippingStreetDetails = new ArrayList<String>();
+        ArrayList<String> shippingProvinceDetails = new ArrayList<String>();
+        ArrayList<String> billingStreetDetails = new ArrayList<String>();
+        ArrayList<String> billingProvinceDetails = new ArrayList<String>();
 
         bookDetails.add(isbnTextField.getText().trim());
         bookDetails.add(titleTextField.getText().trim());
@@ -786,6 +791,24 @@ public class UserViewFrame extends JFrame implements ActionListener
         bookDetails.add(publisherPostalCodeTextField.getText().trim());
         bookDetails.add(publisherCountryTextField.getText().trim());
 
+        shippingStreetDetails.add(shippingStreetNumberTextField.getText().trim());
+        shippingStreetDetails.add(shippingStreetTextField.getText().trim());
+        shippingStreetDetails.add(shippingPostalCodeTextField.getText().trim());
+        shippingStreetDetails.add(shippingCountryTextField.getText().trim());
+
+        shippingProvinceDetails.add(shippingPostalCodeTextField.getText().trim());
+        shippingProvinceDetails.add(shippingCityTextField.getText().trim());
+        shippingProvinceDetails.add(shippingProvinceTextField.getText().trim());
+
+        billingStreetDetails.add(billingStreetNumberTextField.getText().trim());
+        billingStreetDetails.add(billingStreetTextField.getText().trim());
+        billingStreetDetails.add(billingPostalCodeTextField.getText().trim());
+        billingStreetDetails.add(billingCountryTextField.getText().trim());
+
+        billingProvinceDetails.add(billingPostalCodeTextField.getText().trim());
+        billingProvinceDetails.add(billingCityTextField.getText().trim());
+        billingProvinceDetails.add(billingProvinceTextField.getText().trim());
+
         // Handle add author button event
         if (event.getSource() == searchButton)
         {
@@ -798,12 +821,14 @@ public class UserViewFrame extends JFrame implements ActionListener
         // Handle clear button event
         if (event.getSource() == clearButton)
         {
+            System.out.println("Clearing search...");
             clearBook();
         }
-        
         // Handle search list selection
-        if (event.getActionCommand().charAt(3) == '-')
+        else if (event.getActionCommand() != null
+            && event.getActionCommand().charAt(3) == '-')
         {
+            System.out.println("Adding book to basket...");
             String selectedISBN = event.getActionCommand();
             String quantity = "0"; 
 
@@ -814,40 +839,85 @@ public class UserViewFrame extends JFrame implements ActionListener
                     && component.getName() != null
                     && component.getName().equals(selectedISBN))
                 { 
-                    quantity = ((JFormattedTextField)component).getText().trim();
+                    quantity = ((JFormattedTextField)component).getValue().toString();
                 }
             }
 
-            ArrayList<String> selectedBook = new ArrayList<>(Arrays.asList(LookInnaBook.getUsername()
-                                                                            , selectedISBN
-                                                                            , quantity));
-            DBUpdate.addToBasket(selectedBook);
+            ArrayList<String> selectedBook = new ArrayList<>(Arrays.asList(quantity
+                                                                            , LookInnaBook.getUsername()
+                                                                            , selectedISBN));
+            DBUpdate.increaseBooksInBasket(selectedBook);
 
-            displaySelectedBooks(DBQuery.getAllSelectedBooksOfCriteria(new ArrayList<>(Arrays.asList(LookInnaBook.getUsername()))));
-        }
-
-        // Handle search list deletion
-        if (event.getActionCommand().substring(0,7).equals("Delete:"))
-        {
-            System.out.println("Delete book " + event.getActionCommand().substring(8) + " from selects...");
-        }
-
-        // Handle search list editing
-        if (event.getActionCommand().substring(0,5).equals("Edit:"))
-        {
-            System.out.println("Edit book " + event.getActionCommand().substring(6) + " from selects...");
+            displaySelectedBooks();
         }
 
         // Handle clear button event
         if (event.getSource() == checkoutButton)
         {
             System.out.println("Checking out...");
+            Integer orderNumber = -1;
+
+            // Check and add addresses
+            DBCreate.checkAndAddProvinceDetails(shippingProvinceDetails);
+            DBCreate.checkAndAddStreetDetails(shippingStreetDetails);
+            DBCreate.checkAndAddProvinceDetails(billingProvinceDetails);
+            DBCreate.checkAndAddStreetDetails(billingStreetDetails);
+
+            // Add the order
+            orderNumber = DBCreate.orderBooks(new ArrayList<String>(Arrays.asList(LookInnaBook.getUsername())));
+
+            if (orderNumber >= 0)
+            {
+                // Add the orders & Delete the selects
+                DBCreate.addBooksToOrder(orderNumber);
+
+                // Add the order addresses
+                DBCreate.addAddressesToOrder(orderNumber, shippingStreetDetails, billingStreetDetails);
+            }
         }
 
         // Handle clear button event
         if (event.getSource() == clearOrderButton)
         {
             clearOrder();
+        }
+
+        // Handle search list deletion
+        if (event.getActionCommand().length() >= 7
+                    && event.getActionCommand().substring(0,7).equals("Delete:"))
+        {
+            String selectedISBN = event.getActionCommand().substring(8);
+
+            System.out.println("Delete book " + selectedISBN + " from selects...");
+
+            DBDelete.deleteBookFromSelects(new ArrayList<>(Arrays.asList(LookInnaBook.getUsername()
+                                                                            , selectedISBN)));
+
+            displaySelectedBooks();
+        }
+
+        // Handle search list editing
+        if (event.getActionCommand().length() >= 5
+                && event.getActionCommand().substring(0,5).equals("Edit:"))
+        {
+            String selectedISBN = event.getActionCommand().substring(6);
+            System.out.println("Edit book " + selectedISBN + " from selects...");
+            String quantity = "0"; 
+
+            for(Component component : orderPane.getComponents())
+            {
+                //System.out.println("Component:" + component);
+                if (component instanceof JFormattedTextField
+                    && component.getName() != null
+                    && component.getName().equals(selectedISBN))
+                { 
+                    quantity = ((JFormattedTextField)component).getValue().toString();
+                }
+            }
+
+            DBUpdate.updateSelectedBookQuantity(new ArrayList<>(Arrays.asList(quantity
+                                                                                , LookInnaBook.getUsername()
+                                                                                , selectedISBN)));
         }
 
         // Handle billingIsShipping checkbox event

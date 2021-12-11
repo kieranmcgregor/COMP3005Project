@@ -11,17 +11,34 @@ import java.math.*;
 
 public class DBCreate
 {
-    static private final String BOOK_CREATE = "INSERT INTO books(isbn, title, genre, page_count, price, publisher_percentage, quantity, threshold, publisher_id, warehouse_id) VALUES(?,?,?,?,?,?,?,?,?,1)";
+    static private final String BOOK_CREATE = "INSERT INTO books(isbn, title, genre, page_count, price,"+
+                                                "publisher_percentage, quantity, threshold, publisher_id,"+
+                                                "warehouse_id) VALUES(?,?,?,?,?,?,?,?,?,1)";
     static private final String AUTHORS_CREATE = "INSERT INTO authors(id, isbn) VALUES(?,?)";
     static private final String ADDS_CREATE = "INSERT INTO adds(username, isbn) VALUES(?,?)";
-    static private final String AUTHOR_CREATE = "INSERT INTO author(first_name, middle_name, last_name, bio) VALUES(?,?,?,?)";
-    static private final String PUBLISHER_CREATE = "INSERT INTO publisher(name, email, phone_number, number, street, postal_code, country) VALUES(?,?,?,?,?,?,?)";
-    static private final String PROVINCE_CREATE = "INSERT INTO provincial_area(postal_code, city, province) VALUES(?,?,?)";
-    static private final String STREET_CREATE = "INSERT INTO street_area(number, street, postal_code, country) VALUES(?,?,?,?)";
-    static private final String BANK_ACCOUNT_CREATE = "INSERT INTO bank_account(institution_number, transit_number, account_number, balance, id) VALUES(?,?,?,0.00,?)";
+    static private final String AUTHOR_CREATE = "INSERT INTO author(first_name, middle_name, last_name, bio)"+
+                                                    " VALUES(?,?,?,?)";
+    static private final String PUBLISHER_CREATE = "INSERT INTO publisher(name,email,phone_number,number,street,"+
+                                                    "postal_code, country)"+
+                                                    " VALUES(?,?,?,?,?,?,?)";
+    static private final String PROVINCE_CREATE = "INSERT INTO provincial_area(postal_code,city,province)"+
+                                                    " VALUES(?,?,?)";
+    static private final String STREET_CREATE = "INSERT INTO street_area(number,street,postal_code,country)"+
+                                                    " VALUES(?,?,?,?)";
+    static private final String BANK_ACCOUNT_CREATE = "INSERT INTO bank_account(institution_number,transit_number,"+
+                                                        "account_number,balance,id) VALUES(?,?,?,0.00,?)";
     static private final String OWNER_CREATE = "INSERT INTO owner(username, password) VALUES(?,?)";
     static private final String USER_CREATE = "INSERT INTO users(username, password) VALUES(?,?)";
-    static private final String SELECTS_CREATE = "INSERT INTO selects(username, isbn, quantity) VALUES(?,?,?)";
+    static private final String SELECTS_CREATE = "INSERT INTO selects(quantity, username, isbn) VALUES(?,?,?)";
+    static private final String BOOK_ORDER_CREATE = "INSERT INTO book_order(shipping_state,username,warehouse_id,"+
+                                                "shipping_service_id) VALUES(?,?,1,1)";
+    static private final String ORDERS_CREATE = "INSERT INTO orders(order_number,isbn,quantity) VALUES(?,?,?)";
+    static private final String ORDER_ADDRESSES_CREATE = "INSERT INTO order_addresses(order_number,shipping_number"+
+                                                            ",shipping_street,shipping_postal_code,shipping_country"+
+                                                            ",billing_number,billing_street,billing_postal_code"+
+                                                            ",billing_country,current_number,current_street"+
+                                                            ",current_postal_code,current_country)"+
+                                                            " VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
     /*
     Function:   
@@ -61,14 +78,15 @@ public class DBCreate
                 }
                 else if (stringIntFlag[i] == 1)
                 {
-                    prepStmt.setLong(i+1, Long.parseUnsignedLong(entityDetails.get(i)));
+                    prepStmt.setLong(i+1, Long.parseUnsignedLong(entityDetails.get(i+offset)));
                 }
                 else
                 {
-                    prepStmt.setBigDecimal(i+1, new BigDecimal(entityDetails.get(i)));
+                    prepStmt.setBigDecimal(i+1, new BigDecimal(entityDetails.get(i+offset)));
                 }
             }
 
+            System.out.println(prepStmt);
             int i = prepStmt.executeUpdate();
             return true;
         }
@@ -513,9 +531,93 @@ public class DBCreate
     in:         
     return:     
     */
-    protected static Boolean selectBook(ArrayList<String> selectionDetails)
+    protected static Boolean addBooksToBasket(ArrayList<String> selectionDetails)
     {
         System.out.println("Adding book to basket...");
-        return addItem(selectionDetails, SELECTS_CREATE, new int[]{0,0,1});
+        return addItem(selectionDetails, SELECTS_CREATE, new int[]{1,0,0});
+    }
+
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    return:     
+    */
+    protected static Integer orderBooks(ArrayList<String> orderDetails)
+    {
+        Random r = new Random();
+        System.out.println("Ordering books...");
+        orderDetails.add(0, LookInnaBook.orderStates.get(r.nextInt(3)));
+
+        if (addItem(orderDetails, BOOK_ORDER_CREATE, new int[]{0,0}))
+        {
+            return DBQuery.getLastEntryOrderNumber(DBQuery.BOOK_ORDER_QUERY);
+        }
+
+        return -1;
+    }
+
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    return:     
+    */
+    protected static void addBooksToOrder(Integer orderNumber)
+    {
+        System.out.println("Adding books to order...");
+        ArrayList<ArrayList<String>> booksInBasket = DBQuery.getAllSelectedUsernameBooks(new ArrayList<>(Arrays.asList(LookInnaBook.getUsername())));
+
+        for (ArrayList<String> bookInBasket : booksInBasket)
+        {
+            ArrayList<String> orderedBookDetails = new ArrayList<>(Arrays.asList(orderNumber.toString()));
+            orderedBookDetails.add(bookInBasket.get(1));
+            orderedBookDetails.add(bookInBasket.get(2));
+            addItem(orderedBookDetails, ORDERS_CREATE, new int[]{1,0,1});
+
+            // Sell books
+            DBUpdate.sellBooks(new ArrayList<String>(Arrays.asList(bookInBasket.get(2), bookInBasket.get(1))));
+
+            // Add Percentage to publisher account
+            ArrayList<String> priceAndPercentage = DBQuery.getBookPriceAndPercentage(bookInBasket.get(1));
+            Double paymentAmount = Double.parseDouble(priceAndPercentage.get(0)) * Double.parseDouble(priceAndPercentage.get(1)) * Double.parseDouble(bookInBasket.get(2));
+            DBUpdate.payPublisher(paymentAmount, DBQuery.getBookPublisher(bookInBasket.get(1)).get(0));
+            
+            // Delete book from basket
+            DBDelete.deleteBookFromSelects(new ArrayList<>(Arrays.asList(bookInBasket.get(0)
+                                                                            ,bookInBasket.get(1))));
+        }
+    }
+
+     /*
+    Function:   
+    Purpose:    
+    in:         
+    return:     
+    */
+    protected static void addAddressesToOrder(Integer orderNumber
+                                                , ArrayList<String> shippingStreetDetails
+                                                , ArrayList<String> billingStreetDetails)
+    {
+        System.out.println("Adding addressses to order...");
+        ArrayList<String> currentStreetDetails = new ArrayList<String>(shippingStreetDetails);
+        ArrayList<String> order = DBQuery.getOrder(orderNumber);
+        
+        if (order.get(1).equals("picking"))
+        {
+            System.out.println("Order is being picked...");
+            currentStreetDetails = DBQuery.getWarehouseStreetAddress(order.get(4));
+        }
+        else if (order.get(1).equals("shipping"))
+        {
+            System.out.println("Order is being shipped...");
+            currentStreetDetails = DBQuery.getShippingServiceStreetAddress(order.get(5));
+        }
+
+        billingStreetDetails.addAll(currentStreetDetails);
+        shippingStreetDetails.addAll(billingStreetDetails);
+        shippingStreetDetails.add(0, orderNumber.toString());
+
+        addItem(shippingStreetDetails, ORDER_ADDRESSES_CREATE, new int[]{1,0,0,0,0,0,0,0,0,0,0,0,0});
     }
 }
