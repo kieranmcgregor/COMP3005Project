@@ -18,6 +18,7 @@ public class UserViewFrame extends JFrame implements ActionListener
 {
     ArrayList<Component> bookResults = new ArrayList<Component>();
     ArrayList<Component> selectedResults = new ArrayList<Component>();
+    ArrayList<Component> historyResults = new ArrayList<Component>();
     Container container = getContentPane();
     JTabbedPane tabbedPane = new JTabbedPane();
     JLabel pageTitleLabel = new JLabel("LookInnaBook: User");
@@ -27,6 +28,8 @@ public class UserViewFrame extends JFrame implements ActionListener
     JScrollPane searchScrollPane = new JScrollPane(searchPane);
     JPanel orderPane = new JPanel();
     JScrollPane orderScrollPane = new JScrollPane(orderPane);
+    JPanel historyPane = new JPanel();
+    JScrollPane historyScrollPane = new JScrollPane(historyPane);
 
     // Create work tab labels
     // Create Book labels
@@ -142,6 +145,7 @@ public class UserViewFrame extends JFrame implements ActionListener
         addActionEvent();
 
         displaySelectedBooks();
+        displayOrderHistory();
     }
 
     /*
@@ -178,6 +182,7 @@ public class UserViewFrame extends JFrame implements ActionListener
 
         searchPane.setLayout(null);
         orderPane.setLayout(null);
+        historyPane.setLayout(null);
     }
 
     /*
@@ -339,13 +344,17 @@ public class UserViewFrame extends JFrame implements ActionListener
         billingPostalCodeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         billingCountryLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
-        // Set addBook vertical scroll
+        // Set search pane vertical scroll
         searchPane.setPreferredSize(new Dimension(700, 410));
         searchScrollPane.setPreferredSize(new Dimension(700, 400));
 
-        // Set addBook vertical scroll
+        // Set order pane vertical scroll
         orderPane.setPreferredSize(new Dimension(700, 410));
         orderScrollPane.setPreferredSize(new Dimension(700, 400));
+
+        // Set history pane vertical scroll
+        historyPane.setPreferredSize(new Dimension(700, 410));
+        historyScrollPane.setPreferredSize(new Dimension(700, 400));
     }
 
     /*
@@ -463,6 +472,7 @@ public class UserViewFrame extends JFrame implements ActionListener
         // Add tabs to tabbed pane
         tabbedPane.addTab("Search", searchScrollPane);
         tabbedPane.addTab("Order", orderScrollPane);
+        tabbedPane.addTab("History", historyScrollPane);
 
         // Add search and results pane to container
         // container.add(searchPane);
@@ -646,7 +656,7 @@ public class UserViewFrame extends JFrame implements ActionListener
                 }
             }
             JLabel roDetails = new JLabel(bookDetails);
-            quantityField.setName(bookAttributes.get(0));
+            roDetails.setName(bookAttributes.get(0));
 
             // Set component bounds
             button.setBounds(25, yPos, 150, 30);
@@ -729,7 +739,7 @@ public class UserViewFrame extends JFrame implements ActionListener
                 }
             }
             JLabel roDetails = new JLabel(bookDetails);
-            quantityField.setName(bookAttributes.get(0));
+            roDetails.setName(bookAttributes.get(0));
 
             // Set component bounds
             deleteButton.setBounds(25, yPos, 95, 30);
@@ -751,6 +761,63 @@ public class UserViewFrame extends JFrame implements ActionListener
         }
 
         orderPane.setPreferredSize(new Dimension(400, yPos + 55));
+    }
+
+    /*
+    Function:   
+    Purpose:    
+    in:         
+    in:         
+    return:     
+    */
+    protected void displayOrderHistory()
+    {
+        ArrayList<ArrayList<String>> listOfOrders = DBQuery.getAllOrdersByUsername(LookInnaBook.getUsername());
+        int yPos = 25;
+
+        // Remove previous search results
+        for (Component component : historyResults)
+        {
+            historyPane.remove(component);
+        }
+
+        for (int i = listOfOrders.size()-1; i >= 0 ; --i)
+        {
+            System.out.println("Adding order to history...");
+
+            yPos = (25 + (listOfOrders.size() - (i + 1))*35);
+            String orderDetails = new String();
+            ArrayList<String> orderAttributes = listOfOrders.get(i);
+
+            // Build other book details
+            for (int j = 0; j < orderAttributes.size(); ++j)
+            {
+                if (j > 0)
+                {
+                    if (j != 3)
+                    {
+                        orderDetails += ", ";
+                    }
+                    else
+                    {
+                        orderDetails += " ";
+                    }
+                }
+                orderDetails += orderAttributes.get(j);
+            }
+            JLabel roDetails = new JLabel(orderDetails);
+            roDetails.setName(orderAttributes.get(0));
+            roDetails.setBounds(25, yPos, 700, 30);
+            historyPane.add(roDetails);
+            historyResults.add(roDetails);
+        }
+
+        if (yPos < 410)
+        {
+            yPos = 410;
+        }
+
+        historyPane.setPreferredSize(new Dimension(400, yPos + 55));
     }
 
     /*
@@ -874,6 +941,8 @@ public class UserViewFrame extends JFrame implements ActionListener
                 // Add the order addresses
                 DBCreate.addAddressesToOrder(orderNumber, shippingStreetDetails, billingStreetDetails);
             }
+
+            displayOrderHistory();
         }
 
         // Handle clear button event

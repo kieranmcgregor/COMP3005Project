@@ -45,8 +45,8 @@ public class DBQuery
                                                         ",current_postal_code,current_country"+
                                                             " FROM ((book_order NATURAL JOIN orders)"+
                                                                     " NATURAL JOIN order_addresses)"+
-                                                                        " INNER_JOIN provincial_area"+
-                                                                            "ON provincial_area.postal_code = current_postal_code";
+                                                                        " INNER JOIN provincial_area"+
+                                                                            " ON provincial_area.postal_code = current_postal_code";
 
     /*
     Function:   
@@ -665,5 +665,20 @@ public class DBQuery
         return getAllEntriesOfCriteria(new ArrayList<>(Arrays.asList(isbn))
                                         , prepared_selects_query
                                         , new int[]{0}).get(0);
+    }
+
+    /*
+    Function:   getAllOrders
+    Purpose:    query the DB for all orders by Username
+    in:         runningList (running list of books found)
+    return:     runningList (with any newly found books added)
+    */
+    public static ArrayList<ArrayList<String>> getAllOrdersByUsername(String username)
+    {
+        System.out.println("Getting user order history...");
+        String prepared_selects_query = CURRENT_ORDER_ADDRESS_QUERY + " WHERE book_order.username=?";
+        return getAllEntriesOfCriteria(new ArrayList<>(Arrays.asList(username))
+                                        , prepared_selects_query
+                                        , new int[]{0});
     }
 }
