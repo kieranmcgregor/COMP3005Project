@@ -186,6 +186,13 @@ INSERT INTO street_area(number, street, postal_code, country)
 
 INSERT INTO shipping_service(name, number, street, postal_code, country) VALUES ('Canada Post', '10', 'Sandford Fleming Ave.', 'K1G3H3', 'Canada');
 
+CREATE VIEW daily_sales_stats AS
+	SELECT order_date, genre, author.id AS author_id, SUM(orders.quantity * books.price) AS total
+	FROM ((books INNER JOIN orders ON books.isbn = orders.isbn)
+			INNER JOIN book_order ON orders.order_number = book_order.order_number)
+				INNER JOIN (authors NATURAL JOIN author) ON books.isbn = authors.isbn
+	GROUP BY genre, order_date, author.id
+
 CREATE OR REPLACE FUNCTION order_more_books()
     RETURNS TRIGGER
     LANGUAGE PLPGSQL

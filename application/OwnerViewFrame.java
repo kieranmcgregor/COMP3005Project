@@ -14,6 +14,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import java.util.Calendar;
+import java.util.Date;
+
 public class OwnerViewFrame extends JFrame implements ActionListener
 {
     Container container = getContentPane();
@@ -25,7 +28,8 @@ public class OwnerViewFrame extends JFrame implements ActionListener
     JScrollPane workScrollPane = new JScrollPane(workPane);
 
     // Create report tab
-    JPanel reports = new JPanel();
+    JPanel reportsPane = new JPanel();
+    JScrollPane reportsScrollPane = new JScrollPane(reportsPane);
 
     // Create work tab labels
     // Create Book labels
@@ -133,6 +137,20 @@ public class OwnerViewFrame extends JFrame implements ActionListener
     JButton deleteBookButton = new JButton("Delete Book");
     JButton clearButton = new JButton("Clear All Fields");
 
+    // Create reports tab dropdown and date pickers
+    JLabel reportTypeLabel = new JLabel("Search By:");
+    JLabel startDateLabel = new JLabel("Start Date:");
+    JLabel endDateLabel = new JLabel("End Date:");
+
+    String reportTypes[] = { "Total Sales", "Genre", "Author"};
+    JComboBox reportTypeSelection = new JComboBox(reportTypes);
+
+    DateFormat dateFormat = new SimpleDateFormat("dd MM yyyy");
+    JFormattedTextField startDateField = new JFormattedTextField(dateFormat);
+    JFormattedTextField endDateField = new JFormattedTextField(dateFormat);
+
+    JButton getReportButton = new JButton("Get Report");
+
     // Constructor
     OwnerViewFrame()
     {
@@ -165,7 +183,7 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         container.setLayout(null);
 
         workPane.setLayout(null);
-        reports.setLayout(null);
+        reportsPane.setLayout(null);
     }
 
     public void setLocationAndSize()
@@ -272,6 +290,17 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         clearButton.setBounds(295, 1075, 125, 30);
         editBookButton.setBounds(445, 1075, 100, 30);
         deleteBookButton.setBounds(570, 1075, 125, 30);
+
+        // Position dropdown and date pickers
+        reportTypeLabel.setBounds(0, 25, 75, 30);
+        reportTypeSelection.setBounds(80, 25, 100, 30);
+
+        startDateLabel.setBounds(190, 25, 75, 30);
+        startDateField.setBounds(270, 25, 100, 30);
+        endDateLabel.setBounds(380, 25, 75, 30);
+        endDateField.setBounds(460, 25, 100, 30);
+
+        getReportButton.setBounds(590, 25, 100, 30);
     }
 
     public void setUniqueAttributes()
@@ -313,9 +342,18 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         publisherTransitNumberLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         publisherAccountNumberLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
+        // Flood report search labels right
+        reportTypeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        startDateLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        endDateLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+
         // Set addBook vertical scroll
-        workScrollPane.setPreferredSize(new Dimension(400, 440));
+        workScrollPane.setPreferredSize(new Dimension(400, 400));
         workPane.setPreferredSize(new Dimension(400, 1130));
+
+        // Set reports veritcal scroll
+        reportsScrollPane.setPreferredSize(new Dimension(400, 400));
+        reportsPane.setPreferredSize(new Dimension(400, 410));
     }
 
     public void addComponentsToWorkTab()
@@ -407,6 +445,15 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         workPane.add(orderBooksButton);
         workPane.add(deleteBookButton);
         workPane.add(clearButton);
+
+        // Add labels to report pane
+        reportsPane.add(reportTypeLabel);
+        reportsPane.add(startDateLabel);
+        reportsPane.add(endDateLabel);
+        reportsPane.add(reportTypeSelection);
+        reportsPane.add(startDateField);
+        reportsPane.add(endDateField);
+        reportsPane.add(getReportButton);
     }
     public void addComponentsToContainer()
     {
@@ -417,7 +464,7 @@ public class OwnerViewFrame extends JFrame implements ActionListener
 
         // Add tabs to tabbed pane
         tabbedPane.addTab("Work", workScrollPane);
-        tabbedPane.addTab("Reports", reports);
+        tabbedPane.addTab("Reports", reportsScrollPane);
 
         // Add tabbed pane to container
         container.add(tabbedPane);
@@ -446,6 +493,8 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         orderBooksButton.addActionListener(this);
         deleteBookButton.addActionListener(this);
         clearButton.addActionListener(this);
+
+        getReportButton.addActionListener(this);
     }
 
     public void clearAuthor()
@@ -519,6 +568,7 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         ArrayList<String> provinceDetails = new ArrayList<String>();
         ArrayList<String> streetDetails = new ArrayList<String>();
         ArrayList<String> bankAccountDetails = new ArrayList<String>();
+        ArrayList<String> reportSearchDetails = new ArrayList<String>();
 
         bookDetails.add(isbnTextField.getText().trim());
         bookDetails.add(titleTextField.getText().trim());
@@ -554,6 +604,10 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         bankAccountDetails.add(publisherTransitNumberTextField.getText().trim());
         bankAccountDetails.add(publisherAccountNumberTextField.getText().trim());
         bankAccountDetails.add(convertFieldValue(publisherIDTextField));
+
+        reportSearchDetails.add(reportTypeSelection.getSelectedItem().toString());
+        reportSearchDetails.add(startDateField.getText().trim());
+        reportSearchDetails.add(endDateField.getText().trim());
 
         // Handle add author button event
         if (event.getSource() == addAuthorButton)
@@ -688,6 +742,16 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         if (event.getSource() == clearButton)
         {
             clearBook();
+        }
+
+        // Handle clear button event
+        if (event.getSource() == getReportButton)
+        {
+            System.out.println("Getting report...");
+            for (String detail : reportSearchDetails)
+            {
+                System.out.println(detail);
+            }
         }
     }
 }
