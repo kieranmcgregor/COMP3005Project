@@ -47,6 +47,18 @@ public class DBQuery
                                                                     " NATURAL JOIN order_addresses)"+
                                                                         " INNER JOIN provincial_area"+
                                                                             " ON provincial_area.postal_code = current_postal_code";
+    static public final String TOTAL_SALES_QUERY ="SELECT SUM(total) FROM daily_sales_stats"+
+                                                    " WHERE order_date > ? AND order_date < ?";
+    static public final String GENRE_SALES_QUERY ="SELECT genre, SUM(total) FROM daily_sales_stats"+
+                                                    " WHERE order_date > ? AND order_date < ?"+
+                                                    " GROUP BY genre";
+    static public final String AUTHOR_SALES_QUERY ="SELECT author_id,first_name,middle_name,last_name,total_earnings"+
+	                                                    " FROM ((SELECT author_id,SUM(total) AS total_earnings"+
+		   		                                                    " FROM daily_sales_stats"+
+		   		                                                    " WHERE order_date > ? AND order_date < ?"+
+		   		                                                    " GROUP BY author_id) AS author_id_total"+
+		  		                                                " INNER JOIN author ON author_id = author.id)";
+    
 
     /*
     Function:   
@@ -194,12 +206,18 @@ public class DBQuery
                 {
                     prepStmt.setString(i+1, attributeValues.get(i));
                 }
-                else
+                else if (stringIntFlag[i] == 1)
                 {
                     prepStmt.setLong(i+1, Long.parseUnsignedLong(attributeValues.get(i)));
                 }
+                else
+                {
+                    // Format to date
+                    prepStmt.setDate(i+1, java.sql.Date.valueOf(attributeValues.get(i)));
+                }
             }
 
+            System.out.println(prepStmt);
             ResultSet rs = prepStmt.executeQuery();
             Class.forName("org.postgresql.Driver");
 
@@ -680,5 +698,50 @@ public class DBQuery
         return getAllEntriesOfCriteria(new ArrayList<>(Arrays.asList(username))
                                         , prepared_selects_query
                                         , new int[]{0});
+    }
+
+    /*
+    Function:   getTotalSales
+    Purpose:    query the DB for total sales
+    in:         runningList (running list of books found)
+    return:     runningList (with any newly found books added)
+    */
+    public static ArrayList<ArrayList<String>> getTotalSales(ArrayList<String> reportSearchDetails)
+    {
+        System.out.println("Getting total sales...");
+        String prepared_selects_query = TOTAL_SALES_QUERY;
+        return getAllEntriesOfCriteria(reportSearchDetails
+                                        , prepared_selects_query
+                                        , new int[]{2,2});
+    }
+
+    /*
+    Function:   getGenreSales
+    Purpose:    query the DB for genre sales
+    in:         runningList (running list of books found)
+    return:     runningList (with any newly found books added)
+    */
+    public static ArrayList<ArrayList<String>> getGenreSales(ArrayList<String> reportSearchDetails)
+    {
+        System.out.println("Getting genre sales...");
+        String prepared_selects_query = GENRE_SALES_QUERY;
+        return getAllEntriesOfCriteria(reportSearchDetails
+                                        , prepared_selects_query
+                                        , new int[]{2,2});
+    }
+
+    /*
+    Function:   getAuthorSales
+    Purpose:    query the DB for genre sales
+    in:         runningList (running list of books found)
+    return:     runningList (with any newly found books added)
+    */
+    public static ArrayList<ArrayList<String>> getAuthorSales(ArrayList<String> reportSearchDetails)
+    {
+        System.out.println("Getting genre sales...");
+        String prepared_selects_query = AUTHOR_SALES_QUERY;
+        return getAllEntriesOfCriteria(reportSearchDetails
+                                        , prepared_selects_query
+                                        , new int[]{2,2});
     }
 }

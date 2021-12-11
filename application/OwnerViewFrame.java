@@ -145,7 +145,7 @@ public class OwnerViewFrame extends JFrame implements ActionListener
     String reportTypes[] = { "Total Sales", "Genre", "Author"};
     JComboBox reportTypeSelection = new JComboBox(reportTypes);
 
-    DateFormat dateFormat = new SimpleDateFormat("dd MM yyyy");
+    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     JFormattedTextField startDateField = new JFormattedTextField(dateFormat);
     JFormattedTextField endDateField = new JFormattedTextField(dateFormat);
 
@@ -605,7 +605,6 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         bankAccountDetails.add(publisherAccountNumberTextField.getText().trim());
         bankAccountDetails.add(convertFieldValue(publisherIDTextField));
 
-        reportSearchDetails.add(reportTypeSelection.getSelectedItem().toString());
         reportSearchDetails.add(startDateField.getText().trim());
         reportSearchDetails.add(endDateField.getText().trim());
 
@@ -748,9 +747,20 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         if (event.getSource() == getReportButton)
         {
             System.out.println("Getting report...");
-            for (String detail : reportSearchDetails)
+            ArrayList<ArrayList<String>> reportSearchResults = new ArrayList<ArrayList<String>>();
+            String reportType = reportTypeSelection.getSelectedItem().toString();
+
+            if (reportType.equals("Total Sales"))
             {
-                System.out.println(detail);
+                reportSearchResults = DBQuery.getTotalSales(reportSearchDetails);
+            }
+            else if (reportType.equals("Genre"))
+            {
+                reportSearchResults = DBQuery.getGenreSales(reportSearchDetails);
+            }
+            else
+            {
+                reportSearchResults = DBQuery.getAuthorSales(reportSearchDetails);
             }
         }
     }
