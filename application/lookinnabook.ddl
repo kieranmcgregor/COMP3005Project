@@ -194,12 +194,17 @@ $$
     BEGIN
         IF NEW.quantity < NEW.threshold THEN
         UPDATE books SET quantity = quantity +
-            (SELECT COUNT(*) FROM book_order NATURAL JOIN orders WHERE order_date < NOW() - INTERVAL '30 days' AND books.ISBN == orders.ISBN);
+            (SELECT SUM(orders.quantity) AS total
+				FROM (books INNER JOIN orders ON books.isbn = orders.isbn)
+						INNER JOIN book_order ON orders.order_number = book_order.order_number
+				WHERE books.isbn = NEW.isbn AND book_order.order_date > NOW() - INTERVAL '30 days')
+			WHERE books.isbn = NEW.isbn;
         END IF;
 
         RETURN NEW;
     END;
 $$;
+
 
 CREATE TRIGGER check_books_levels
     AFTER UPDATE
