@@ -19,6 +19,8 @@ import java.util.Date;
 
 public class OwnerViewFrame extends JFrame implements ActionListener
 {
+    ArrayList<Component> reportResults = new ArrayList<Component>();
+
     Container container = getContentPane();
     JTabbedPane tabbedPane = new JTabbedPane();
     JLabel pageTitleLabel = new JLabel("LookInnaBook: Owner");
@@ -470,6 +472,56 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         container.add(tabbedPane);
     }
 
+     /*
+    Function:   
+    Purpose:    
+    in:         
+    in:         
+    return:     
+    */
+    protected void displayReportResults(ArrayList<ArrayList<String>> reportSearchResults)
+    {
+        System.out.println("Displaying report...");
+        int yPos = 60;
+
+        // Remove previous search results
+        for (Component component : reportResults)
+        {
+            reportsPane.remove(component);
+        }
+
+        for (int i = 0; i < reportSearchResults.size() ; ++i)
+        {
+            System.out.println("Adding data to report...");
+
+            yPos = (60 + i*35);
+            String reportDetails = new String();
+            ArrayList<String> reportAttributes = reportSearchResults.get(i);
+
+            // Build other book details
+            for (int j = 0; j < reportAttributes.size(); ++j)
+            {
+                if (j > 0)
+                {
+                    reportDetails += ", ";
+                }
+                reportDetails += reportAttributes.get(j);
+            }
+            JLabel roDetails = new JLabel(reportDetails);
+            roDetails.setName(reportAttributes.get(0));
+            roDetails.setBounds(25, yPos, 700, 30);
+            reportsPane.add(roDetails);
+            reportResults.add(roDetails);
+        }
+
+        if (yPos < 410)
+        {
+            yPos = 410;
+        }
+
+        reportsPane.setPreferredSize(new Dimension(400, yPos + 55));
+    }
+
     public void addActionEvent()
     {
         addAuthorButton.addActionListener(this);
@@ -762,6 +814,8 @@ public class OwnerViewFrame extends JFrame implements ActionListener
             {
                 reportSearchResults = DBQuery.getAuthorSales(reportSearchDetails);
             }
+
+            displayReportResults(reportSearchResults);
         }
     }
 }
