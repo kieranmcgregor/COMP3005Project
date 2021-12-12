@@ -459,7 +459,7 @@ public class UserViewFrame extends JFrame implements ActionListener
         // Add components to view
         container.add(pageTitleLabel);
 
-        addComponentsToTopPane();
+        addComponentsToSearchPane();
         addComponentsToOrderPane();
 
         // Add tabs to tabbed pane

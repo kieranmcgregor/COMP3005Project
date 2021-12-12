@@ -484,7 +484,7 @@ public class DBQuery
 
         if (ownerValues.size() > 0)
         {
-            return ownerDetails.get(1).equals(userValues.get(1));
+            return ownerDetails.get(1).equals(ownerValues.get(1));
         }
 
         return false;
