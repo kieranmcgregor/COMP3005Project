@@ -180,6 +180,10 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         }
     }
 
+    /*
+    Function:   setLayoutManager
+    Purpose:    set up container template    
+    */
     public void setLayoutManager()
     {
         container.setLayout(null);

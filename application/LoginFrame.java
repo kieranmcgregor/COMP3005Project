@@ -38,11 +38,8 @@ public class LoginFrame extends JFrame implements ActionListener
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   setLayoutManager
+    Purpose:    set up container template    
     */
     public void setLayoutManager()
     {
