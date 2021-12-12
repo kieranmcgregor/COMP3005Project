@@ -41,10 +41,12 @@ public class DBCreate
                                                             " VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   addItem
+    Purpose:    helper method to add an new tuple to a table
+    in:         entityDetails (tuple attribute details)
+    in:         prepared_statement (statement to be used to create new tuple)
+    in:         stringIntFlag (mask to identify attribute type)
+    return:     true if created false otherwise
     */
     protected static Boolean addItem(ArrayList<String> entityDetails
                                         , String preparedStatement
@@ -54,10 +56,13 @@ public class DBCreate
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   addItem
+    Purpose:    add an new tuple to a table
+    in:         entityDetails (tuple attribute details)
+    in:         prepared_statement (statement to be used to create new tuple)
+    in:         stringIntFlag (mask to identify attribute type)
+    in:         offset (used if first entry is not used in creation)
+    return:     true if created false otherwise
     */
     protected static Boolean addItem(ArrayList<String> entityDetails
                                         , String prepared_statement
@@ -98,10 +103,10 @@ public class DBCreate
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   addProvinceDetails
+    Purpose:    add province to province_area table
+    in:         provinceDetails (attributes to add new province)
+    return:     true if created
     */
     protected static Boolean addProvinceDetails(ArrayList<String> provinceDetails)
     {
@@ -110,10 +115,10 @@ public class DBCreate
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   checkAndAddProvinceDetails
+    Purpose:    check if province exists and if not add province to province_area table
+    in:         provinceDetails (attributes to add new province)
+    return:     true if created
     */
     public static Boolean checkAndAddProvinceDetails(ArrayList<String> provinceDetails)
     {
@@ -127,23 +132,10 @@ public class DBCreate
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
-    */
-    protected static Boolean editProvinceDetails(ArrayList<String> provinceDetails)
-    {
-        System.out.println("Editing province details...");
-
-        return true;
-    }
-
-    /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   checkAndEditProvinceDetails
+    Purpose:    check if province exists and if not add province to province_area table else edit province
+    in:         provinceDetails (attributes to add new province)
+    return:     true if created
     */
     public static Boolean checkAndEditProvinceDetails(ArrayList<String> provinceDetails)
     {
@@ -153,15 +145,16 @@ public class DBCreate
         }
         else
         {
-            return editProvinceDetails(provinceDetails);
+            System.out.println("Editing province details...");
+            return true;
         }
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   addStreetDetails
+    Purpose:    add street to street_area table
+    in:         streetDetails (attributes to add new street)
+    return:     true if created
     */
     protected static Boolean addStreetDetails(ArrayList<String> streetDetails)
     {
@@ -170,10 +163,10 @@ public class DBCreate
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   checkAndAddStreetDetails
+    Purpose:    check if street exists and if not add street to street_area table
+    in:         streetDetails (attributes to add new street)
+    return:     true if created
     */
     public static Boolean checkAndAddStreetDetails(ArrayList<String> streetDetails)
     {
@@ -187,23 +180,10 @@ public class DBCreate
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
-    */
-    protected static Boolean editStreetDetails(ArrayList<String> streetDetails)
-    {
-        System.out.println("Editing street details...");
-
-        return true;
-    }
-
-    /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   checkAndEditStreetDetails
+    Purpose:    check if street exists and if not add street to street_area table else edit street
+    in:         streetDetails (attributes to add new street)
+    return:     true if created
     */
     public static Boolean checkAndEditStreetDetails(ArrayList<String> streetDetails)
     {
@@ -213,15 +193,17 @@ public class DBCreate
         }
         else
         {
-            return editStreetDetails(streetDetails);
+            System.out.println("Editing street details...");
+            return true;
         }
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   addPublisher
+    Purpose:    add publisher to publisher table
+    in:         publisherDetails (attributes to add new publisher)
+    in:         streetDetails (attributes to add new street)
+    return:     true if created
     */
     protected static Integer addPublisher(ArrayList<String> publisherDetails, ArrayList<String> streetDetails)
     {
@@ -236,10 +218,11 @@ public class DBCreate
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   checkAndAddPublisher
+    Purpose:    check if publihser exists and if not add publisher to publisher table
+    in:         publisherDetails (attributes to add new publisher)
+    in:         streetDetails (attributes to add new street)
+    return:     true if created
     */
     public static Integer checkAndAddPublisher(ArrayList<String> publisherDetails, ArrayList<String> streetDetails)
     {
@@ -253,37 +236,24 @@ public class DBCreate
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
-    */
-    protected static Boolean editPublisher(ArrayList<String> publisherDetails)
-    {
-        System.out.println("Editing publisher...");
-
-        return true;
-    }
-
-    /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   checkAndEditPublisher
+    Purpose:    check if publisher exists and if not add publisher to publisher table else edit publisher
+    in:         publisherDetails (attributes to add new publisher)
+    return:     true if created
     */
     public static void checkAndEditPublisher(ArrayList<String> publisherDetails)
     {
         if (DBQuery.publisherExists(publisherDetails))
         {
-            editPublisher(publisherDetails);
+            System.out.println("Editing publisher...");
         }
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   addBankAccount
+    Purpose:    add bank account to bank_account table
+    in:         bankAccountDetails (attributes to add new bank account)
+    return:     true if created
     */
     protected static Boolean addBankAccount(ArrayList<String> bankAccountDetails)
     {
@@ -292,10 +262,10 @@ public class DBCreate
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   checkAndAddBankAccount
+    Purpose:    check if bank account exists and if not add bank account to bank account table
+    in:         bankAccountDetails (attributes to add new bank account)
+    return:     true if created
     */
     public static Boolean checkAndAddBankAccount(ArrayList<String> bankAccountDetails)
     {
@@ -310,22 +280,10 @@ public class DBCreate
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
-    */
-    protected static Boolean editBankAccount(ArrayList<String> bankAccountDetails)
-    {
-        System.out.println("Editing bank account...");
-        return true;
-    }
-
-    /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   checkAndEditBankAccount
+    Purpose:    check if bank account exists and if not add bank account to bank account table else edit bank account
+    in:         bankAccountDetails (attributes to add new bank account)
+    return:     true if created
     */
     public static void checkAndEditBankAccount(ArrayList<String> bankAccountDetails)
     {
@@ -335,15 +293,15 @@ public class DBCreate
         }
         else
         {
-            editBankAccount(bankAccountDetails);
+            System.out.println("Editing bank account...");
         }
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   addAuthor
+    Purpose:    add author to author table
+    in:         authorDetails (attributes to add new author)
+    return:     true if created
     */
     protected static Integer addAuthor(ArrayList<String> authorDetails)
     {
@@ -357,10 +315,10 @@ public class DBCreate
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   checkAndAddAuthor
+    Purpose:    check if author exists and if not add author to author table
+    in:         authorDetails (attributes to add new author)
+    return:     true if created
     */
     public static Integer checkAndAddAuthor(ArrayList<String> authorDetails)
     {
@@ -373,10 +331,10 @@ public class DBCreate
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   addBook
+    Purpose:    add book to books table
+    in:         bookDetails (attributes to add new book)
+    return:     true if created
     */
     public static Boolean addBook(ArrayList<String> bookDetails)
     {
@@ -385,10 +343,10 @@ public class DBCreate
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   checkAndAddBook
+    Purpose:    check if book exists and if not add book to book table
+    in:         bookDetails (attributes to add new book)
+    return:     true if created
     */
     public static Boolean checkAndAddBook(ArrayList<String> bookDetails)
     {
@@ -402,23 +360,9 @@ public class DBCreate
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
-    */
-    public static Boolean editBook(ArrayList<String> bookDetails)
-    {
-        System.out.println("Editing book...");
-
-        return true;
-    }
-
-    /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   checkAndEditBook
+    Purpose:    check if book exists, if not add book, else update book
+    in:         bookDetails (attributes to add/update book)  
     */
     public static void checkAndEditBook(ArrayList<String> bookDetails)
     {
@@ -428,15 +372,16 @@ public class DBCreate
         }
         else
         {
-            editBook(bookDetails);
+            System.out.println("Editing book...");
         }
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   addAuthorLink
+    Purpose:    add author authors book to authors table
+    in:         authorDetails (attributes to add new author)
+    in:         bookDetails (attributes to add new book)
+    return:     true if created
     */
     protected static Boolean addAuthorLink(ArrayList<String> authorDetails, ArrayList<String> bookDetails)
     {
@@ -446,10 +391,10 @@ public class DBCreate
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   addOwnerLink
+    Purpose:    add order addresses to order_addresses table
+    in:         bookDetails (attributes to add new book to bookorder)
+    return:     true if created
     */
     protected static Boolean addOwnerLink(ArrayList<String> bookDetails)
     {
@@ -460,10 +405,14 @@ public class DBCreate
 
 
     /*
-    Function:   addBook
+    Function:   checkAndAddAllBookDetails
     Purpose:    to add a book and any other dependent entities to the DB
+    in:         provinceDetails (a list of details described by the province)
+    in:         streetDetails (a list of details described by the street)
+    in:         publisherDetails (a list of details described by the publisher)
+    in:         bankAccountDetails (a list of details described by the bank account)
+    in:         authorDetails (a list of details described by the author)
     in:         bookDetails (a list of details described by the book)
-    return:     Boolean (true if addition is successful)
     */
     public static void checkAndAddAllBookDetails(ArrayList<String> provinceDetails
                                                     , ArrayList<String> streetDetails
@@ -502,10 +451,10 @@ public class DBCreate
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   addOwner
+    Purpose:    add owner to owner table
+    in:         ownerDetails (attributes to add new owner)
+    return:     true if created
     */
     protected static Boolean addOwner(ArrayList<String> ownerDetails)
     {
@@ -514,10 +463,10 @@ public class DBCreate
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   addUser
+    Purpose:    add user to user table
+    in:         userDetails (attributes to add new user)
+    return:     true if created
     */
     protected static Boolean addUser(ArrayList<String> userDetails)
     {
@@ -526,10 +475,10 @@ public class DBCreate
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   addBooksToBasket
+    Purpose:    add books to selects table
+    in:         selectionDetails (attributes to add new books to basket)
+    return:     true if created
     */
     protected static Boolean addBooksToBasket(ArrayList<String> selectionDetails)
     {
@@ -538,10 +487,10 @@ public class DBCreate
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   orderBooks
+    Purpose:    add books to book_order table
+    in:         orderDetails (attributes to add new book to bookorder)
+    return:     order_number
     */
     protected static Integer orderBooks(ArrayList<String> orderDetails)
     {
@@ -558,10 +507,9 @@ public class DBCreate
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   addBooksToOrder
+    Purpose:    add username orders books to orders table and update books quantity, publisher balance and empty basket
+    in:         orderNumber (attributes to add new username orders books to orders table)
     */
     protected static void addBooksToOrder(Integer orderNumber)
     {
@@ -589,11 +537,10 @@ public class DBCreate
         }
     }
 
-     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    /*
+    Function:   addAddressesToOrder
+    Purpose:    add order addresses to order_addresses table
+    in:         orderDetails (attributes to add new book to bookorder)
     */
     protected static void addAddressesToOrder(Integer orderNumber
                                                 , ArrayList<String> shippingStreetDetails

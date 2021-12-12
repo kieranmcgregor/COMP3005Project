@@ -48,24 +48,23 @@ public class DBQuery
                                                                         " INNER JOIN provincial_area"+
                                                                             " ON provincial_area.postal_code = current_postal_code";
     static public final String TOTAL_SALES_QUERY ="SELECT SUM(total) FROM daily_sales_stats"+
-                                                    " WHERE order_date > ? AND order_date < ?";
+                                                    " WHERE order_date >= ? AND order_date <= ?";
     static public final String GENRE_SALES_QUERY ="SELECT genre, SUM(total) FROM daily_sales_stats"+
-                                                    " WHERE order_date > ? AND order_date < ?"+
+                                                    " WHERE order_date >= ? AND order_date <= ?"+
                                                     " GROUP BY genre";
     static public final String AUTHOR_SALES_QUERY ="SELECT author_id,first_name,middle_name,last_name,total_earnings"+
 	                                                    " FROM ((SELECT author_id,SUM(total) AS total_earnings"+
 		   		                                                    " FROM daily_sales_stats"+
-		   		                                                    " WHERE order_date > ? AND order_date < ?"+
+		   		                                                    " WHERE order_date >= ? AND order_date <= ?"+
 		   		                                                    " GROUP BY author_id) AS author_id_total"+
 		  		                                                " INNER JOIN author ON author_id = author.id)";
     
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   getLastEntryID
+    Purpose:    get the ID of the last entry in a table
+    in:         query (the prepared query)     
+    return:     ID (id of last entry)
     */
     protected static Integer getLastEntryID(String query)
     {
@@ -93,11 +92,10 @@ public class DBQuery
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   getLastEntryOrderNumber
+    Purpose:    get the order_number of the last entry
+    in:         query (The prepared query to use to search)
+    return:     order_number (The order_number of the last entry)
     */
     protected static Integer getLastEntryOrderNumber(String query)
     {
@@ -125,13 +123,16 @@ public class DBQuery
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   getSpecificEntry
+    Purpose:    get a first entry matching a query
+    in:         attributeValues (values of the attributes being searched)
+    in:         prepared_query (prepared statement for query)
+    in:         stringIntFlag (mask indicating type of provided attributeValues)   
+    return:     queryReturnValues (attributes of query first query found)
     */
-    protected static ArrayList<String> getSpecificEntry(ArrayList<String> attributeValues, String prepared_query, int[] stringIntFlag)
+    protected static ArrayList<String> getSpecificEntry(ArrayList<String> attributeValues
+                                                            , String prepared_query
+                                                            , int[] stringIntFlag)
     {
         ArrayList<String> queryReturnValues = new ArrayList<String>();
 
@@ -182,15 +183,16 @@ public class DBQuery
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   getAllEntriesOfCriteria
+    Purpose:    get all entries that match given values
+    in:         attributeValues (Values to be matched in a given tuple)
+    in:         prepared_query (prepared statement to be populated and queried)
+    in:         stringIntFlag (mask indicating type of provided attributeValues)
+    return:     queryReturnValues (A list of tuples and the requested attributes)
     */
     protected static ArrayList<ArrayList<String>> getAllEntriesOfCriteria(ArrayList<String> attributeValues
-                                                                , String prepared_query
-                                                                , int[] stringIntFlag)
+                                                                            , String prepared_query
+                                                                            , int[] stringIntFlag)
     {
         ArrayList<ArrayList<String>> queryReturnValues = new ArrayList<ArrayList<String>>();
 
@@ -251,15 +253,16 @@ public class DBQuery
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
+    Function:   checkIfExists
+    Purpose:    Check if a given query returns at least one entry
+    in:         entityDetails (Values to be matched in a given tuple)
+    in:         prepared_query (prepared statement to be populated and queried)
+    in:         stringIntFlag (mask indicating type of provided attributeValues)
     return:     
     */
     protected static Boolean checkIfExists(ArrayList<String> entityDetails
-                                        , String prepared_statement
-                                        , int[] stringIntFlag)
+                                            , String prepared_statement
+                                            , int[] stringIntFlag)
     {
         try
         {
@@ -296,11 +299,10 @@ public class DBQuery
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   provinceDetailsExist
+    Purpose:    check if the province details exist in the province area table
+    in:         provinceDetails (values to use in search)         
+    return:     true if exists false otherwise
     */
     public static Boolean provinceDetailsExist(ArrayList<String> provinceDetails)
     {
@@ -316,11 +318,10 @@ public class DBQuery
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   streetDetailsExist
+    Purpose:    check if the street details exist in the street area table
+    in:         streetDetails (values to use in search)         
+    return:     true if exists false otherwise
     */
     public static Boolean streetDetailsExist(ArrayList<String> streetDetails)
     {
@@ -339,11 +340,10 @@ public class DBQuery
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   publisherExists
+    Purpose:    check if the publisher exist in the publisher table
+    in:         publisherDetails (values to use in search)         
+    return:     true if exists false otherwise
     */
     public static Boolean publisherExists(ArrayList<String> publisherDetails)
     {
@@ -358,11 +358,10 @@ public class DBQuery
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   bankAccountExists
+    Purpose:    check if the bank account exists in the bank account table
+    in:         bankAccountDetails (values to use in search)         
+    return:     true if exists false otherwise
     */
     public static Boolean bankAccountExists(ArrayList<String> bankAccountDetails)
     {
@@ -380,11 +379,10 @@ public class DBQuery
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   authorExists
+    Purpose:    check if the author exists in the author table
+    in:         authorDetails (values to use in search)         
+    return:     true if exists false otherwise
     */
     public static Boolean authorExists(ArrayList<String> authorDetails)
     {
@@ -400,11 +398,10 @@ public class DBQuery
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   bookExists
+    Purpose:    check if the book exists in the book table
+    in:         bookDetails (values to use in search)         
+    return:     true if exists false otherwise
     */
     public static Boolean bookExists(ArrayList<String> bookDetails)
     {
@@ -419,11 +416,11 @@ public class DBQuery
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   authorLinkExists
+    Purpose:    check if the author authors book exists in the authors table
+    in:         authorDetails (values to use in search)         
+    in:         bookDetails (values to use in search)         
+    return:     true if exists false otherwise
     */
     public static Boolean authorLinkExists(ArrayList<String> authorDetails, ArrayList<String> bookDetails)
     {
@@ -440,12 +437,11 @@ public class DBQuery
         return false;
     }
 
-     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    /*
+    Function:   ownerLinkExists
+    Purpose:    check if the owner adds book exists in the adds table      
+    in:         bookDetails (values to use in search)         
+    return:     true if exists false otherwise
     */
     public static Boolean ownerLinkExists(ArrayList<String> bookDetails)
     {
@@ -462,11 +458,10 @@ public class DBQuery
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   ownerExists
+    Purpose:    check if the owner exists in the owner table      
+    in:         ownerDetails (values to use in search)         
+    return:     true if exists false otherwise
     */
     public static Boolean ownerExists(ArrayList<String> ownerDetails)
     {
@@ -476,27 +471,30 @@ public class DBQuery
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   ownerPasswordIsValid
+    Purpose:    get owner details from owner table      
+    in:         ownerDetails (values to use in search and validation)         
+    return:     true if passwords match false otherwise
     */
     public static Boolean ownerPasswordIsValid(ArrayList<String> ownerDetails)
     {
         System.out.println("Checking owner password...");
         String prepared_owner_query = OWNER_QUERY + " WHERE username=?";
-        ArrayList<String> userValues = getSpecificEntry(ownerDetails, prepared_owner_query, new int[]{0});
+        ArrayList<String> ownerValues = getSpecificEntry(ownerDetails, prepared_owner_query, new int[]{0});
 
-        return ownerDetails.get(1).equals(userValues.get(1));
+        if (ownerValues.size() > 0)
+        {
+            return ownerDetails.get(1).equals(userValues.get(1));
+        }
+
+        return false;
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   userExists
+    Purpose:    check if the user exists in the user table      
+    in:         userDetails (values to use in search)         
+    return:     true if exists false otherwise
     */
     public static Boolean userExists(ArrayList<String> userDetails)
     {
@@ -506,25 +504,10 @@ public class DBQuery
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
-    */
-    public static Boolean selectionExists(ArrayList<String> selectionDetails)
-    {
-        System.out.println("Checking user selected book...");
-        String prepared_selects_query = SELECTS_QUERY + " WHERE username=? AND isbn=?";
-        return checkIfExists(selectionDetails, prepared_selects_query, new int[]{0,0});
-    }
-
-    /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   userPasswordIsValid
+    Purpose:    get user details from user table      
+    in:         userDetails (values to use in search and validation)         
+    return:     true if passwords match false otherwise
     */
     public static Boolean userPasswordIsValid(ArrayList<String> userDetails)
     {
@@ -536,10 +519,23 @@ public class DBQuery
     }
 
     /*
+    Function:   selectionExists
+    Purpose:    check if the user selects book in the selects table 
+    in:         selectionDetails (values to use in search)         
+    return:     true if exists false otherwise
+    */
+    public static Boolean selectionExists(ArrayList<String> selectionDetails)
+    {
+        System.out.println("Checking user selected book...");
+        String prepared_selects_query = SELECTS_QUERY + " WHERE username=? AND isbn=?";
+        return checkIfExists(selectionDetails, prepared_selects_query, new int[]{0,0});
+    }
+
+    /*
     Function:   getAllSelectedBooksOfCriteria
-    Purpose:    query the DB for all books given a certain search criteria
-    in:         runningList (running list of books found)
-    return:     runningList (with any newly found books added)
+    Purpose:    query the DB for all selected books in selects table with a given criteria
+    in:         selectionDetails (values to use in search)
+    return:     return all entities found and their attributes
     */
     public static ArrayList<ArrayList<String>> getAllSelectedBooksOfCriteria(ArrayList<String> selectionDetails)
     {
@@ -549,9 +545,9 @@ public class DBQuery
 
     /*
     Function:   getAllSelectedUsernameBooks
-    Purpose:    query the DB for all books given a certain search criteria
-    in:         runningList (running list of books found)
-    return:     runningList (with any newly found books added)
+    Purpose:    query the DB for all books selected by a certain user in selects table with a given criteria
+    in:         selectionDetails (values to use in search)
+    return:     return all entities found and their attributes
     */
     public static ArrayList<ArrayList<String>> getAllSelectedUsernameBooks(ArrayList<String> selectionDetails)
     {
@@ -561,9 +557,9 @@ public class DBQuery
 
     /*
     Function:   getAllBooksOfCriteria
-    Purpose:    query the DB for all books given a certain search criteria
-    in:         runningList (running list of books found)
-    return:     runningList (with any newly found books added)
+    Purpose:    query the DB for all books in books table with a given criteria
+    in:         bookDetails (values to use in search)
+    return:     return all entities found and their attributes
     */
     public static ArrayList<ArrayList<String>> getAllBooksOfCriteria(ArrayList<String> bookDetails)
     {
@@ -616,132 +612,132 @@ public class DBQuery
 
     /*
     Function:   getOrder
-    Purpose:    query the DB for order state
-    in:         runningList (running list of books found)
-    return:     runningList (with any newly found books added)
+    Purpose:    query the DB for order in book_order table
+    in:         orderNumber (values to use in search)
+    return:     return all entities found and their attributes
     */
     public static ArrayList<String> getOrder(Integer orderNumber)
     {
         System.out.println("Getting order " + orderNumber + "...");
-        String prepared_selects_query = BOOK_ORDER_QUERY + " WHERE order_number=?";
+        String prepared_book_order_query = BOOK_ORDER_QUERY + " WHERE order_number=?";
         return getAllEntriesOfCriteria(new ArrayList<>(Arrays.asList(orderNumber.toString()))
-                                        , prepared_selects_query
+                                        , prepared_book_order_query
                                         , new int[]{1}).get(0);
     }
 
     /*
     Function:   getWarehouseStreetAddress
-    Purpose:    query the DB for warehouse street address
-    in:         runningList (running list of books found)
-    return:     runningList (with any newly found books added)
+    Purpose:    query the DB for warhouse street address in warehouse, province and street tables
+    in:         warehouseID (warehouse id)
+    return:     return warehouse address attributes
     */
     public static ArrayList<String> getWarehouseStreetAddress(String warehouseID)
     {
-        String prepared_selects_query = WAREHOUSE_ADDRESS_QUERY + " WHERE id=?";
+        String prepared_warehouse_query = WAREHOUSE_ADDRESS_QUERY + " WHERE id=?";
         return getAllEntriesOfCriteria(new ArrayList<>(Arrays.asList(warehouseID))
-                                        , prepared_selects_query
+                                        , prepared_warehouse_query
                                         , new int[]{1}).get(0);
     }
 
     /*
     Function:   getShippingServiceStreetAddress
-    Purpose:    query the DB for shipping service street address
-    in:         runningList (running list of books found)
-    return:     runningList (with any newly found books added)
+    Purpose:    query the DB for shipping service street address in shipping_service, province and street tables
+    in:         shippingServiceID (shipping service id)
+    return:     return warehouse address attributes
     */
     public static ArrayList<String> getShippingServiceStreetAddress(String shippingServiceID)
     {
-        String prepared_selects_query = SHIPPING_SERVICE_ADDRESS_QUERY + " WHERE id=?";
+        String prepared_shipping_service_query = SHIPPING_SERVICE_ADDRESS_QUERY + " WHERE id=?";
         return getAllEntriesOfCriteria(new ArrayList<>(Arrays.asList(shippingServiceID))
-                                        , prepared_selects_query
+                                        , prepared_shipping_service_query
                                         , new int[]{1}).get(0);
     }
 
     /*
     Function:   getBookPriceAndPercentage
-    Purpose:    query the DB for shipping service street address
-    in:         runningList (running list of books found)
-    return:     runningList (with any newly found books added)
+    Purpose:    query the DB for book publisher percentage in books tables
+    in:         isbn (book isbn)
+    return:     return warehouse address attributes
     */
     public static ArrayList<String> getBookPriceAndPercentage(String isbn)
     {
-        String prepared_selects_query = BOOK_PRICE_PERCENTAGE_QUERY + " WHERE isbn=?";
+        String prepared_publisher_percentage_query = BOOK_PRICE_PERCENTAGE_QUERY + " WHERE isbn=?";
         return getAllEntriesOfCriteria(new ArrayList<>(Arrays.asList(isbn))
-                                        , prepared_selects_query
+                                        , prepared_publisher_percentage_query
                                         , new int[]{0}).get(0);
     }
 
     /*
     Function:   getBookPublisher
-    Purpose:    query the DB for shipping service street address
-    in:         runningList (running list of books found)
-    return:     runningList (with any newly found books added)
+    Purpose:    query the DB for book publisher details in books and publisher tables
+    in:         isbn (book isbn)
+    return:     return publisher attributes
     */
     public static ArrayList<String> getBookPublisher(String isbn)
     {
-        String prepared_selects_query = BOOK_PUBLISHER_QUERY + " WHERE isbn=?";
+        String prepared_publisher_query = BOOK_PUBLISHER_QUERY + " WHERE isbn=?";
         return getAllEntriesOfCriteria(new ArrayList<>(Arrays.asList(isbn))
-                                        , prepared_selects_query
+                                        , prepared_publisher_query
                                         , new int[]{0}).get(0);
     }
 
     /*
-    Function:   getAllOrders
-    Purpose:    query the DB for all orders by Username
-    in:         runningList (running list of books found)
-    return:     runningList (with any newly found books added)
+    Function:   getAllOrdersByUsername
+    Purpose:    query the DB for all orders details on orders made by a given user in book_order, order_addresses, provincial_area tables
+    in:         username (user's username)
+    return:     return order attributes
     */
     public static ArrayList<ArrayList<String>> getAllOrdersByUsername(String username)
     {
         System.out.println("Getting user order history...");
-        String prepared_selects_query = CURRENT_ORDER_ADDRESS_QUERY + " WHERE book_order.username=?";
+        String prepared_current_address_query = CURRENT_ORDER_ADDRESS_QUERY + " WHERE book_order.username=?";
         return getAllEntriesOfCriteria(new ArrayList<>(Arrays.asList(username))
-                                        , prepared_selects_query
+                                        , prepared_current_address_query
                                         , new int[]{0});
     }
 
     /*
     Function:   getTotalSales
-    Purpose:    query the DB for total sales
-    in:         runningList (running list of books found)
-    return:     runningList (with any newly found books added)
+    Purpose:    query the DB for total sales in daily_sales_stats view
+    in:         reportSearchDetails (criteria to use for search)
+    return:     return query attributes
     */
     public static ArrayList<ArrayList<String>> getTotalSales(ArrayList<String> reportSearchDetails)
     {
         System.out.println("Getting total sales...");
-        String prepared_selects_query = TOTAL_SALES_QUERY;
+        String prepared_total_sales_query = TOTAL_SALES_QUERY;
         return getAllEntriesOfCriteria(reportSearchDetails
-                                        , prepared_selects_query
+                                        , prepared_total_sales_query
                                         , new int[]{2,2});
     }
 
     /*
     Function:   getGenreSales
-    Purpose:    query the DB for genre sales
-    in:         runningList (running list of books found)
-    return:     runningList (with any newly found books added)
+    Purpose:    query the DB for genre sales in daily_sales_stats view
+    in:         reportSearchDetails (criteria to use for search)
+    return:     return query attributes
     */
     public static ArrayList<ArrayList<String>> getGenreSales(ArrayList<String> reportSearchDetails)
     {
         System.out.println("Getting genre sales...");
-        String prepared_selects_query = GENRE_SALES_QUERY;
+        String prepared_genre_sales_query = GENRE_SALES_QUERY;
         return getAllEntriesOfCriteria(reportSearchDetails
-                                        , prepared_selects_query
+                                        , prepared_genre_sales_query
                                         , new int[]{2,2});
     }
 
     /*
     Function:   getAuthorSales
-    Purpose:    query the DB for genre sales
-    in:         runningList (running list of books found)
-    return:     runningList (with any newly found books added)
+    Purpose:    query the DB for genre sales in daily_sales_stats view
+    in:         reportSearchDetails (criteria to use for search)
+    return:     return query attributes
     */
     public static ArrayList<ArrayList<String>> getAuthorSales(ArrayList<String> reportSearchDetails)
     {
         System.out.println("Getting genre sales...");
-        String prepared_selects_query = AUTHOR_SALES_QUERY;
+        String prepared_author_sales_query = AUTHOR_SALES_QUERY;
         return getAllEntriesOfCriteria(reportSearchDetails
-                                        , prepared_selects_query
+                                        , prepared_author_sales_query
                                         , new int[]{2,2});
     }
 }
