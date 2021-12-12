@@ -19,10 +19,12 @@ public class DBUpdate
     static private final String BANK_BALANCE_UPDATE = "UPDATE bank_account SET balance = balance + ? WHERE id=?";
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   updateItem
+    Purpose:    update tuple in a table
+    in:         entityDetails (Attribute values to use for updating)
+    in:         prepared_statement (sql statement used for updating table)
+    in:         stringIntFlag (mask to identify attribute types)
+    return:     true is updated, false otherwise
     */
     protected static Boolean updateItem(ArrayList<String> entityDetails
                                         , String prepared_statement
@@ -61,10 +63,10 @@ public class DBUpdate
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   editAuthor
+    Purpose:    update author details in author table
+    in:         authorDetails (Attribute values to use for updating)
+    return:     true is updated, false otherwise
     */
     protected static Boolean editAuthor(ArrayList<String> authorDetails)
     {
@@ -103,10 +105,9 @@ public class DBUpdate
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   checkAndEditAuthor
+    Purpose:    check if author exist if not create author else edit author
+    in:         authorDetails (Attribute values to use for updating)
     */
     public static void checkAndEditAuthor(ArrayList<String> authorDetails)
     {
@@ -121,10 +122,9 @@ public class DBUpdate
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   buyBooks
+    Purpose:    add books to the bookstore (i.e. increase book quantity in books)
+    in:         bookDetails (Attribute values to use for updating)
     */
     public static void buyBooks(ArrayList<String> bookDetails)
     {
@@ -135,10 +135,9 @@ public class DBUpdate
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   checkAndBuyBooks
+    Purpose:    check if book exists if so edit book quantity
+    in:         bookDetails (Attribute values to use for updating)
     */
     public static void checkAndBuyBooks(ArrayList<String> bookDetails)
     {
@@ -149,10 +148,9 @@ public class DBUpdate
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   sellBooks
+    Purpose:    subtract books to the bookstore (i.e. reduce book quantity in books)
+    in:         bookDetails (Attribute values to use for updating)
     */
     public static void sellBooks(ArrayList<String> bookDetails)
     {
@@ -162,10 +160,9 @@ public class DBUpdate
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   checkAndSellBooks
+    Purpose:    check if book exists if so edit book quantity
+    in:         bookDetails (Attribute values to use for updating)
     */
     public static void checkAndSellBooks(ArrayList<String> bookDetails)
     {
@@ -176,10 +173,9 @@ public class DBUpdate
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   payPublisher
+    Purpose:    add money to publisher bank account (i.e. increase balance in publisher bank account)
+    in:         bookDetails (Attribute values to use for updating)
     */
     public static void payPublisher(Double paymentAmount, String publisherID)
     {
@@ -191,10 +187,9 @@ public class DBUpdate
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   increaseSelectedBooksQuantity
+    Purpose:    add books to the basket (i.e. increase book quantity in selects)
+    in:         selectionDetails (Attribute values to use for updating)
     */
     public static void increaseSelectedBooksQuantity(ArrayList<String> selectionDetails)
     {
@@ -207,10 +202,9 @@ public class DBUpdate
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   increaseBooksInBasket
+    Purpose:    if book not in basket add it to basket else increase quantity of books in basket
+    in:         selectionDetails (Attribute values to use for updating)
     */
     public static void increaseBooksInBasket(ArrayList<String> selectionDetails)
     {
@@ -227,10 +221,9 @@ public class DBUpdate
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   updateSelectedBookQuantity
+    Purpose:    change selected book quantity to given value
+    in:         selectionDetails (Attribute values to use for updating)
     */
     public static void updateSelectedBookQuantity(ArrayList<String> selectionDetails)
     {
