@@ -47,11 +47,8 @@ public class LoginFrame extends JFrame implements ActionListener
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   setLocationAndSize
+    Purpose:    set location and size of view components    
     */
     public void setLocationAndSize()
     {
@@ -72,11 +69,8 @@ public class LoginFrame extends JFrame implements ActionListener
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   setUniqueAttributes
+    Purpose:    set attributes unique to certain components     
     */
     public void setUniqueAttributes()
     {
@@ -90,11 +84,8 @@ public class LoginFrame extends JFrame implements ActionListener
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   addComponentsToContainer
+    Purpose:    add components to window
     */
     public void addComponentsToContainer()
     {
@@ -115,11 +106,8 @@ public class LoginFrame extends JFrame implements ActionListener
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   addActionEvent
+    Purpose:    add listners for action components
     */
     public void addActionEvent()
     {
@@ -131,11 +119,9 @@ public class LoginFrame extends JFrame implements ActionListener
 
     // Override action performed
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   actionPerformed
+    Purpose:    Execute actions on event
+    in:         event (event that occured)
     */
     @Override
     public void actionPerformed(ActionEvent event)
@@ -260,7 +246,7 @@ public class LoginFrame extends JFrame implements ActionListener
             passwordField.setText("");
         }
         
-        // Handle Clear button event
+        // Handle show password event
         if (event.getSource() == showPassword)
         {
             if (showPassword.isSelected())

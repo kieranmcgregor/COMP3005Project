@@ -166,6 +166,13 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         addActionEvent();
     }
 
+    /*
+    Function:   createFormatter
+    Purpose:    created formatting mask
+    in:         mask (mask pattern)
+    in:         replacementChar (character to replace empty spaces in prompt)
+    return:     MaskFormatter used to format a string
+    */
     protected static MaskFormatter createFormatter(final String mask, char replacementChar)
     {
         try
@@ -192,6 +199,10 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         reportsPane.setLayout(null);
     }
 
+    /*
+    Function:   setLocationAndSize
+    Purpose:    set location and size of view components    
+    */
     public void setLocationAndSize()
     {
         // Set location and size of each component
@@ -309,6 +320,10 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         getReportButton.setBounds(590, 25, 100, 30);
     }
 
+    /*
+    Function:   setUniqueAttributes
+    Purpose:    set attributes unique to certain components     
+    */
     public void setUniqueAttributes()
     {
         // Set title font and size
@@ -362,6 +377,10 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         reportsPane.setPreferredSize(new Dimension(400, 410));
     }
 
+    /*
+    Function:   addComponentsToWorkTab
+    Purpose:    add components to panels     
+    */
     public void addComponentsToWorkTab()
     {
         // Add book labels to work tab
@@ -451,7 +470,14 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         workPane.add(orderBooksButton);
         workPane.add(deleteBookButton);
         workPane.add(clearButton);
+    }
 
+    /*
+    Function:   addComponentsToReportTab
+    Purpose:    add components to work panel   
+    */
+    public void addComponentsToReportTab()
+    {
         // Add labels to report pane
         reportsPane.add(reportTypeLabel);
         reportsPane.add(startDateLabel);
@@ -461,12 +487,18 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         reportsPane.add(endDateField);
         reportsPane.add(getReportButton);
     }
+
+    /*
+    Function:   addComponentsToContainer
+    Purpose:    add components to window
+    */
     public void addComponentsToContainer()
     {
         // Add components to view
         container.add(pageTitleLabel);
 
         addComponentsToWorkTab();
+        addComponentsToReportTab();
 
         // Add tabs to tabbed pane
         tabbedPane.addTab("Work", workScrollPane);
@@ -476,12 +508,10 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         container.add(tabbedPane);
     }
 
-     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    /*
+    Function:   displayReportResults
+    Purpose:    display the results returned from DB query for report data
+    in:         reportSearchResults (results returned from DB query)
     */
     protected void displayReportResults(ArrayList<ArrayList<String>> reportSearchResults)
     {
@@ -526,6 +556,10 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         reportsPane.setPreferredSize(new Dimension(400, yPos + 55));
     }
 
+    /*
+    Function:   addActionEvent
+    Purpose:    add listners for action components
+    */
     public void addActionEvent()
     {
         addAuthorButton.addActionListener(this);
@@ -553,6 +587,10 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         getReportButton.addActionListener(this);
     }
 
+    /*
+    Function:   clearAuthor()
+    Purpose:    clear author fields
+    */
     public void clearAuthor()
     {
         authorIDsTextField.setText("");
@@ -562,6 +600,10 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         authorBioTextArea.setText("");
     }
 
+    /*
+    Function:   clearAddress()
+    Purpose:    clear address fields
+    */
     public void clearAddress()
     {
         publisherStreetNumberTextField.setText("");
@@ -572,6 +614,10 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         publisherCountryTextField.setText("");
     }
 
+    /*
+    Function:   clearPublisher()
+    Purpose:    clear publisher fields
+    */
     public void clearPublisher()
     {
         publisherIDTextField.setText("");
@@ -580,6 +626,10 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         publisherPhoneNumberTextField.setText("");
     }
 
+    /*
+    Function:   clearBankAccount()
+    Purpose:    clear bank account fields
+    */
     public void clearBankAccount()
     {
         publisherInstitutionNumberTextField.setText("");
@@ -587,6 +637,10 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         publisherAccountNumberTextField.setText("");
     }
 
+    /*
+    Function:   clearBook()
+    Purpose:    clear book fields
+    */
     public void clearBook()
     {
         isbnTextField.setText("");
@@ -604,6 +658,11 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         clearBankAccount();
     }
 
+    /*
+    Function:   convertFieldValue
+    Purpose:    get field value and convert to a string
+    in:         fieldForConversion (field that requires value conversion)
+    */
     public String convertFieldValue(JFormattedTextField fieldForConversion)
     {
         if (!fieldForConversion.getText().trim().isEmpty())
@@ -615,6 +674,11 @@ public class OwnerViewFrame extends JFrame implements ActionListener
     }
 
     // Override action performed
+    /*
+    Function:   actionPerformed
+    Purpose:    Execute actions on event
+    in:         event (event that occured)
+    */
     @Override
     public void actionPerformed(ActionEvent event)
     {

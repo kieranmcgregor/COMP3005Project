@@ -149,11 +149,11 @@ public class UserViewFrame extends JFrame implements ActionListener
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   createFormatter
+    Purpose:    created formatting mask
+    in:         mask (mask pattern)
+    in:         replacementChar (character to replace empty spaces in prompt)
+    return:     MaskFormatter used to format a string
     */
     protected static MaskFormatter createFormatter(final String mask, char replacementChar)
     {
@@ -183,11 +183,8 @@ public class UserViewFrame extends JFrame implements ActionListener
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   setLocationAndSize
+    Purpose:    set location and size of view components    
     */
     public void setLocationAndSize()
     {
@@ -291,11 +288,8 @@ public class UserViewFrame extends JFrame implements ActionListener
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   setUniqueAttributes
+    Purpose:    set attributes unique to certain components     
     */
     public void setUniqueAttributes()
     {
@@ -355,13 +349,10 @@ public class UserViewFrame extends JFrame implements ActionListener
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   addComponentsToSearchPane
+    Purpose:    add components to panels     
     */
-    public void addComponentsToTopPane()
+    public void addComponentsToSearchPane()
     {
         // Add book labels to work tab
         searchPane.add(isbnLabel);
@@ -412,7 +403,14 @@ public class UserViewFrame extends JFrame implements ActionListener
 
         searchPane.add(searchButton);
         searchPane.add(clearButton);
+    }
 
+    /*
+    Function:   addComponentsToOrderPane
+    Purpose:    add components to panels     
+    */
+    public void addComponentsToOrderPane()
+    {
         // Add shipping address fields
         orderPane.add(shippingStreetNumberLabel);
         orderPane.add(shippingStreetLabel);
@@ -453,11 +451,8 @@ public class UserViewFrame extends JFrame implements ActionListener
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   addComponentsToContainer
+    Purpose:    add components to window
     */
     public void addComponentsToContainer()
     {
@@ -465,6 +460,7 @@ public class UserViewFrame extends JFrame implements ActionListener
         container.add(pageTitleLabel);
 
         addComponentsToTopPane();
+        addComponentsToOrderPane();
 
         // Add tabs to tabbed pane
         tabbedPane.addTab("Search", searchScrollPane);
@@ -477,11 +473,8 @@ public class UserViewFrame extends JFrame implements ActionListener
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   addActionEvent
+    Purpose:    add listners for action components
     */
     public void addActionEvent()
     {
@@ -494,11 +487,8 @@ public class UserViewFrame extends JFrame implements ActionListener
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   clearAuthor()
+    Purpose:    clear author fields
     */
     public void clearAuthor()
     {
@@ -508,11 +498,8 @@ public class UserViewFrame extends JFrame implements ActionListener
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   clearAddress()
+    Purpose:    clear address fields
     */
     public void clearAddress()
     {
@@ -525,11 +512,8 @@ public class UserViewFrame extends JFrame implements ActionListener
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   clearPublisher()
+    Purpose:    clear publisher fields
     */
     public void clearPublisher()
     {
@@ -539,11 +523,8 @@ public class UserViewFrame extends JFrame implements ActionListener
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   clearBook()
+    Purpose:    clear book fields
     */
     public void clearBook()
     {
@@ -559,11 +540,8 @@ public class UserViewFrame extends JFrame implements ActionListener
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   clearOrder
+    Purpose:    clear order fields
     */
     public void clearOrder()
     {
@@ -583,11 +561,9 @@ public class UserViewFrame extends JFrame implements ActionListener
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   convertFieldValue
+    Purpose:    get field value and convert to a string
+    in:         fieldForConversion (field that requires value conversion)
     */
     public String convertFieldValue(JFormattedTextField fieldForConversion)
     {
@@ -600,11 +576,9 @@ public class UserViewFrame extends JFrame implements ActionListener
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   displayBooks
+    Purpose:    display the books returned from DB query for book data
+    in:         listOfBooks (results returned from DB query)
     */
     protected void displayBooks(ArrayList<ArrayList<String>> listOfBooks)
     {
@@ -675,11 +649,8 @@ public class UserViewFrame extends JFrame implements ActionListener
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   displaySelectedBooks
+    Purpose:    display the selected books returned from DB query for selects data
     */
     protected void displaySelectedBooks()
     {
@@ -761,11 +732,8 @@ public class UserViewFrame extends JFrame implements ActionListener
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   displayOrderHistory
+    Purpose:    display the order history returned from DB query for book_order data
     */
     protected void displayOrderHistory()
     {
@@ -817,14 +785,12 @@ public class UserViewFrame extends JFrame implements ActionListener
         historyPane.setPreferredSize(new Dimension(400, yPos + 55));
     }
 
-    /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
-    */
     // Override action performed
+    /*
+    Function:   actionPerformed
+    Purpose:    Execute actions on event
+    in:         event (event that occured)
+    */
     @Override
     public void actionPerformed(ActionEvent event)
     {
@@ -888,6 +854,7 @@ public class UserViewFrame extends JFrame implements ActionListener
             System.out.println("Clearing search...");
             clearBook();
         }
+
         // Handle search list selection
         else if (event.getActionCommand() != null
             && event.getActionCommand().charAt(3) == '-')
@@ -915,7 +882,7 @@ public class UserViewFrame extends JFrame implements ActionListener
             displaySelectedBooks();
         }
 
-        // Handle clear button event
+        // Handle checkout button event
         if (event.getSource() == checkoutButton)
         {
             System.out.println("Checking out...");
@@ -942,13 +909,13 @@ public class UserViewFrame extends JFrame implements ActionListener
             displayOrderHistory();
         }
 
-        // Handle clear button event
+        // Handle clear order button event
         if (event.getSource() == clearOrderButton)
         {
             clearOrder();
         }
 
-        // Handle search list deletion
+        // Handle order list deletion
         if (event.getActionCommand().length() >= 7
                     && event.getActionCommand().substring(0,7).equals("Delete:"))
         {
@@ -962,7 +929,7 @@ public class UserViewFrame extends JFrame implements ActionListener
             displaySelectedBooks();
         }
 
-        // Handle search list editing
+        // Handle order list editing
         if (event.getActionCommand().length() >= 5
                 && event.getActionCommand().substring(0,5).equals("Edit:"))
         {
