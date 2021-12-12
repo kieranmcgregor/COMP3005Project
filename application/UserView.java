@@ -8,6 +8,10 @@ import javax.swing.*;
 
 public class UserView
 {
+    /*
+    Function:   showUserView
+    Purpose:    Set up user window     
+    */
     public static void showUserView()
     {
         System.out.println("User View Screen...");

@@ -15,10 +15,10 @@ public class DBDelete
     static private final String SELECTS_DELETE = "DELETE FROM selects WHERE username=? AND isbn=?";
     
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   deleteItem
+    Purpose:    delete an item from a table
+    in:         prepared_statement statement to delete tuple from table
+    return:     row number if deleted, -1 otherwise
     */
     protected static Integer deleteItem(String prepared_statement
                                         , ArrayList<String> entityDetails
@@ -64,10 +64,10 @@ public class DBDelete
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   deleteBook
+    Purpose:    delete an book from books table
+    in:         isbn  (isbn to delete from books table)
+    return:     true if deleted, false otherwise
     */
     public static Boolean deleteBook(String isbn)
     {
@@ -76,10 +76,10 @@ public class DBDelete
     }
 
     /*
-    Function:   
-    Purpose:    
-    in:         
-    return:     
+    Function:   deleteBookFromSelects
+    Purpose:    delete an book from selects table
+    in:         selectsBookDetails (username and isbn to delete from selects table)
+    return:     true if deleted, false otherwise
     */
     public static Boolean deleteBookFromSelects(ArrayList<String> selectsBookDetails)
     {

@@ -9,11 +9,8 @@ import javax.swing.*;
 public class OwnerView
 {
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   showOwnerView
+    Purpose:    Set up owner window     
     */
     public static void showOwnerView()
     {

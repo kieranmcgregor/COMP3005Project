@@ -9,11 +9,8 @@ import javax.swing.*;
 public class Login
 {
     /*
-    Function:   
-    Purpose:    
-    in:         
-    in:         
-    return:     
+    Function:   login
+    Purpose:    Set up login window     
     */
     public static void login()
     {
