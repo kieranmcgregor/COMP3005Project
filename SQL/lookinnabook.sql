@@ -1,11 +1,14 @@
+-- Create database
 CREATE DATABASE lookinnabook;
 
+-- Create provincial_area table if it doesn't exist
 CREATE TABLE IF NOT EXISTS provincial_area (
     postal_code VARCHAR(6) PRIMARY KEY,
     city VARCHAR(255) NOT NULL,
     province VARCHAR(255) NOT NULL
 );
 
+-- Create street_area table if it doesn't exist
 CREATE TABLE IF NOT EXISTS street_area (
     number VARCHAR(20) NOT NULL,
     street VARCHAR(255) NOT NULL,
@@ -14,6 +17,7 @@ CREATE TABLE IF NOT EXISTS street_area (
     PRIMARY KEY(number, street, postal_code, country)
 );
 
+-- Create publisher table if it doesn't exist
 CREATE TABLE IF NOT EXISTS publisher (
     ID SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -28,6 +32,7 @@ CREATE TABLE IF NOT EXISTS publisher (
         ON DELETE CASCADE
 );
 
+-- Create bank_account table if it doesn't exist
 CREATE TABLE IF NOT EXISTS bank_account (
     institution_number NUMERIC(3,0),
     transit_number NUMERIC(5,0),
@@ -37,6 +42,7 @@ CREATE TABLE IF NOT EXISTS bank_account (
     ID INTEGER REFERENCES publisher(ID) ON DELETE CASCADE NOT NULL
 );
 
+-- Create owner table if it doesn't exist
 CREATE TABLE IF NOT EXISTS owner (
     username VARCHAR(255) PRIMARY KEY,
     password VARCHAR(255),
@@ -45,6 +51,7 @@ CREATE TABLE IF NOT EXISTS owner (
     last_name VARCHAR(255)
 );
 
+-- Create users table if it doesn't exist
 CREATE TABLE IF NOT EXISTS users (
     username VARCHAR(255) PRIMARY KEY,
     password VARCHAR(255),
@@ -61,6 +68,7 @@ CREATE TABLE IF NOT EXISTS users (
         ON DELETE CASCADE
 );
 
+-- Create author table if it doesn't exist
 CREATE TABLE IF NOT EXISTS author (
     ID SERIAL PRIMARY KEY,
     first_name VARCHAR(255) NOT NULL,
@@ -69,6 +77,7 @@ CREATE TABLE IF NOT EXISTS author (
     bio VARCHAR(1000)
 );
 
+-- Create shipping_service table if it doesn't exist
 CREATE TABLE IF NOT EXISTS shipping_service (
     ID SERIAL PRIMARY KEY,
     name VARCHAR(255),
@@ -78,6 +87,7 @@ CREATE TABLE IF NOT EXISTS shipping_service (
     country VARCHAR(255)
 );
 
+-- Create warehouse table if it doesn't exist
 CREATE TABLE IF NOT EXISTS warehouse (
     ID SERIAL PRIMARY KEY,
     number VARCHAR(20) NOT NULL,
@@ -89,6 +99,7 @@ CREATE TABLE IF NOT EXISTS warehouse (
         ON DELETE CASCADE
 );
 
+-- Create books table if it doesn't exist
 CREATE TABLE books (
     ISBN VARCHAR(17) PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
@@ -102,6 +113,7 @@ CREATE TABLE books (
     warehouse_id INTEGER REFERENCES warehouse(ID) ON DELETE RESTRICT NOT NULL
 );
 
+-- Create book_order table if it doesn't exist
 CREATE TABLE book_order (
     order_number SERIAL PRIMARY KEY,
     shipping_state VARCHAR(255),
@@ -111,6 +123,7 @@ CREATE TABLE book_order (
     shipping_service_id INTEGER REFERENCES shipping_service(ID) ON DELETE RESTRICT NOT NULL
 );
 
+-- Create order_addresses table if it doesn't exist
 CREATE TABLE order_addresses (
     order_number INTEGER REFERENCES book_order(order_number) ON DELETE CASCADE NOT NULL,
     shipping_number VARCHAR(20) NOT NULL,
@@ -143,18 +156,21 @@ CREATE TABLE order_addresses (
         ON DELETE CASCADE
 );
 
+-- Create adds table if it doesn't exist
 CREATE TABLE adds (
     username VARCHAR(255) REFERENCES owner(username) ON DELETE CASCADE NOT NULL,
     ISBN VARCHAR(17) REFERENCES books(ISBN) ON DELETE CASCADE NOT NULL,
     PRIMARY KEY (username, ISBN)
 );
 
+-- Create authors table if it doesn't exist
 CREATE TABLE authors (
     ID INTEGER REFERENCES author(ID) ON DELETE CASCADE NOT NULL,
     ISBN VARCHAR(17) REFERENCES books(ISBN) ON DELETE CASCADE NOT NULL,
     PRIMARY KEY (ID, ISBN)
 );
 
+-- Create selects table if it doesn't exist
 CREATE TABLE selects (
     username VARCHAR(255) REFERENCES users(username) ON DELETE CASCADE NOT NULL,
     ISBN VARCHAR(17) REFERENCES books(ISBN) ON DELETE CASCADE NOT NULL,
@@ -162,6 +178,7 @@ CREATE TABLE selects (
     PRIMARY KEY(username, ISBN)
 );
 
+-- Create selects orders if it doesn't exist
 CREATE TABLE orders (
     order_number INTEGER REFERENCES book_order(order_number) ON DELETE CASCADE NOT NULL,
     ISBN VARCHAR(17) REFERENCES books(ISBN) ON DELETE CASCADE NOT NULL,
@@ -169,23 +186,31 @@ CREATE TABLE orders (
     PRIMARY KEY(order_number, ISBN)
 );
 
+-- Insert warehouse provincial_area data
 INSERT INTO provincial_area(postal_code, city, province)
     VALUES ('K4B1P6', 'Ottawa', 'Ontario');
 
+-- Insert warehouse street_area data
 INSERT INTO street_area(number, street, postal_code, country)
     VALUES ('5225', 'Boundary Rd.', 'K4B1P6', 'Canada');
 
+-- Insert warehouse
 INSERT INTO warehouse(number, street, postal_code, country)
     VALUES ('5225', 'Boundary Rd.', 'K4B1P6', 'Canada');
 
+-- Insert shipping_service provincial_area data
 INSERT INTO provincial_area(postal_code, city, province)
     VALUES ('K1G3H3', 'Ottawa', 'Ontario');
 
+-- Insert shipping_service street_area data
 INSERT INTO street_area(number, street, postal_code, country)
     VALUES ('10', 'Sandford Fleming Ave.', 'K1G3H3', 'Canada');
 
-INSERT INTO shipping_service(name, number, street, postal_code, country) VALUES ('Canada Post', '10', 'Sandford Fleming Ave.', 'K1G3H3', 'Canada');
+-- Insert shipping_service
+INSERT INTO shipping_service(name, number, street, postal_code, country)
+    VALUES ('Canada Post', '10', 'Sandford Fleming Ave.', 'K1G3H3', 'Canada');
 
+-- Create view for reports
 CREATE VIEW daily_sales_stats AS
 	SELECT order_date, genre, author.id AS author_id, SUM(orders.quantity * books.price) AS total
 	FROM ((books INNER JOIN orders ON books.isbn = orders.isbn)
@@ -193,6 +218,7 @@ CREATE VIEW daily_sales_stats AS
 				INNER JOIN (authors NATURAL JOIN author) ON books.isbn = authors.isbn
 	GROUP BY genre, order_date, author.id;
 
+-- Create function for trigger to add books to books when below the user specified threshold
 CREATE OR REPLACE FUNCTION order_more_books()
     RETURNS TRIGGER
     LANGUAGE PLPGSQL
@@ -212,7 +238,7 @@ $$
     END;
 $$;
 
-
+-- Create trigger to check book quantity levels
 CREATE TRIGGER check_books_levels
     AFTER UPDATE
     ON books
