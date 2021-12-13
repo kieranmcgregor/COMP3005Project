@@ -134,7 +134,6 @@ public class OwnerViewFrame extends JFrame implements ActionListener
     JButton editAuthorButton = new JButton("Edit Author");
     JButton clearAuthorButton = new JButton("Clear Author");
     JButton addBookButton = new JButton("Add Book");
-    JButton orderBooksButton = new JButton("Order Books");
     JButton editBookButton = new JButton("Edit Book");
     JButton deleteBookButton = new JButton("Delete Book");
     JButton clearButton = new JButton("Clear All Fields");
@@ -302,11 +301,10 @@ public class OwnerViewFrame extends JFrame implements ActionListener
         publisherTransitNumberTextField.setBounds(350, 970, 150, 30);
         publisherAccountNumberTextField.setBounds(350, 1005, 150, 30);
 
-        orderBooksButton.setBounds(20, 1075, 125, 30);
-        addBookButton.setBounds(170, 1075, 100, 30);
-        clearButton.setBounds(295, 1075, 125, 30);
-        editBookButton.setBounds(445, 1075, 100, 30);
-        deleteBookButton.setBounds(570, 1075, 125, 30);
+        addBookButton.setBounds(45, 1075, 150, 30);
+        clearButton.setBounds(205, 1075, 150, 30);
+        editBookButton.setBounds(365, 1075, 150, 30);
+        deleteBookButton.setBounds(525, 1075, 150, 30);
 
         // Position dropdown and date pickers
         reportTypeLabel.setBounds(0, 25, 75, 30);
@@ -467,7 +465,6 @@ public class OwnerViewFrame extends JFrame implements ActionListener
 
         workPane.add(addBookButton);
         workPane.add(editBookButton);
-        workPane.add(orderBooksButton);
         workPane.add(deleteBookButton);
         workPane.add(clearButton);
     }
@@ -580,7 +577,6 @@ public class OwnerViewFrame extends JFrame implements ActionListener
 
         addBookButton.addActionListener(this);
         editBookButton.addActionListener(this);
-        orderBooksButton.addActionListener(this);
         deleteBookButton.addActionListener(this);
         clearButton.addActionListener(this);
 
@@ -835,13 +831,6 @@ public class OwnerViewFrame extends JFrame implements ActionListener
                                                 , bankAccountDetails
                                                 , authorDetails
                                                 , bookDetails);
-        }
-
-        // Handle edit button event
-        if (event.getSource() == orderBooksButton)
-        {
-            System.out.println("Ordering books...");
-            DBUpdate.checkAndBuyBooks(bookDetails);
         }
 
          // Handle edit button event
