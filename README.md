@@ -10,7 +10,7 @@ REQUIREMENTS
 -PostgreSQL 4.3.1 JDBC driver (must be in JRE to work)
 
 PROVIDED
--The provided DLL will create the LookInnaBook database, all tables, add the warehous and shipping service and establish the threshold trigger
+-The provided DDL.sql file will create the LookInnaBook database, all tables, add the warehous and shipping service and establish the threshold trigger
 -All .java files required to run the program
 
 INSTRUCTIONS

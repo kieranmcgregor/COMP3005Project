@@ -8,9 +8,9 @@ import java.util.*;
 
 public class LookInnaBook
 {
-    static public final String DB_URL = "jdbc:postgresql://localhost:5433/lookinnabook";
-    static public final String USER = "postgres";
-    static public final String PW = "S##+d57750!9";
+    static public final String DB_URL = "jdbc:postgresql://localhost:{PORT}/lookinnabook";
+    static public final String USER = "{USERNAME}";
+    static public final String PW = "{PASSWORD}";
     static public final ArrayList<String> orderStates = new ArrayList<>(Arrays.asList("picking", "shipping", "delivered"));
     
     private static String username = new String();
