@@ -15,12 +15,14 @@ SELECT publisher_id FROM books WHERE isbn=?;
 
 SELECT price,publisher_percentage FROM books WHERE isbn=?;
 
+SELECT * FROM authors ORDER BY id;
 SELECT * FROM authors WHERE ID=? AND isbn=?;
 
 SELECT * FROM adds WHERE username=? AND isbn=?;
 
 SELECT * FROM author WHERE ID=?;
 
+SELECT * FROM publisher ORDER BY id;
 SELECT * FROM publisher WHERE ID=?;
 
 SELECT * FROM provincial_area WHERE postal_code=?;
@@ -42,6 +44,7 @@ SELECT books.isbn,selects.quantity,title,genre,page_count,price,first_name,middl
 SELECT * FROM selects WHERE username=?;
 SELECT * FROM selects WHERE username=? AND isbn=?;
 
+SELECT * FROM book_order ORDER BY order_number;
 SELECT * FROM book_order WHERE order_number=?;
 
 SELECT number,street,postal_code,country FROM warehouse WHERE id=?;

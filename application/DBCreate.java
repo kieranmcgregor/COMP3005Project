@@ -211,7 +211,7 @@ public class DBCreate
         publisherDetails.addAll(streetDetails);
         if (addItem(publisherDetails, PUBLISHER_CREATE, new int[]{0,0,0,0,0,0,0}, 1))
         {
-            return DBQuery.getLastEntryID(DBQuery.PUBLISHER_QUERY);
+            return DBQuery.getLastEntryID(DBQuery.PUBLISHER_QUERY + " ORDER BY id");
         }
 
         return -1;
@@ -308,7 +308,7 @@ public class DBCreate
         System.out.println("Adding author...");
         if (addItem(authorDetails, AUTHOR_CREATE, new int[]{0,0,0,0}, 1))
         {
-            return DBQuery.getLastEntryID(DBQuery.AUTHOR_QUERY);
+            return DBQuery.getLastEntryID(DBQuery.AUTHOR_QUERY + " ORDER BY id");
         }
 
         return -1;
@@ -500,7 +500,7 @@ public class DBCreate
 
         if (addItem(orderDetails, BOOK_ORDER_CREATE, new int[]{0,0}))
         {
-            return DBQuery.getLastEntryOrderNumber(DBQuery.BOOK_ORDER_QUERY);
+            return DBQuery.getLastEntryOrderNumber(DBQuery.BOOK_ORDER_QUERY + " ORDER BY order_number");
         }
 
         return -1;
