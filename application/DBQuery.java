@@ -592,7 +592,7 @@ public class DBQuery
             if (!bookDetails.get(i).isEmpty()
                 && bookDetails.get(i).charAt(0) != '_')
             {
-                if (attributeValues.size() > 1)
+                if (attributeValues.size() > 0)
                 {
                     preparedStatement += " AND";
                 }
