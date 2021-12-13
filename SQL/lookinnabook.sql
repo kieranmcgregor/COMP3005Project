@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS shipping_service (
     number VARCHAR(20),
     street VARCHAR(255),
     postal_code VARCHAR(6),
-    country VARCHAR(255),
+    country VARCHAR(255)
 );
 
 CREATE TABLE IF NOT EXISTS warehouse (
@@ -191,7 +191,7 @@ CREATE VIEW daily_sales_stats AS
 	FROM ((books INNER JOIN orders ON books.isbn = orders.isbn)
 			INNER JOIN book_order ON orders.order_number = book_order.order_number)
 				INNER JOIN (authors NATURAL JOIN author) ON books.isbn = authors.isbn
-	GROUP BY genre, order_date, author.id
+	GROUP BY genre, order_date, author.id;
 
 CREATE OR REPLACE FUNCTION order_more_books()
     RETURNS TRIGGER
@@ -216,5 +216,5 @@ $$;
 CREATE TRIGGER check_books_levels
     AFTER UPDATE
     ON books
-    FOR EACH STATEMENT
+    FOR EACH ROW
     EXECUTE PROCEDURE order_more_books();
